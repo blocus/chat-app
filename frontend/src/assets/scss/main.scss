@@ -1,0 +1,559 @@
+$radius: 5px;
+$primaryColor: #04ac9b;
+$black: darken($primaryColor, 30);
+$secondaryColor: #ab3903;
+$white: lighten($secondaryColor, 67);
+$mutedColor: #aaa7a5;
+$statusSize: 12px;
+$navWidth: 300px;
+$connectedStatusColor: #059229;
+$disconnectedStatusColor: #e71212;
+$busyStatusColor: #c4b81b;
+$border: 1px solid rgba($mutedColor, 0.3);
+$lvl1: 3rem;
+$lvl2: 2rem;
+$lvl3: 1.5rem;
+$lvl4: 1rem;
+$mutedTextColor: darken($mutedColor, 25);
+$lvl5: 0.7rem;
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap");
+$fontFamily: "Noto Sans JP", sans-serif;
+
+:root {
+  font-size: 16px;
+  color: $black;
+  font-family: $fontFamily;
+}
+
+* {
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+  box-sizing: border-box;
+}
+
+#root {
+  background: $white;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+button,
+a {
+  cursor: pointer;
+}
+
+#wrapper {
+  display: flex;
+  border-radius: 1rem;
+  border-left: $border;
+  width: 100%;
+}
+
+aside {
+  background: $white;
+  padding: 1rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  & > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    button,
+    a {
+      padding: 0.6rem 0rem;
+      text-align: center;
+      border-radius: $radius;
+      font-size: 1.2em;
+      width: 3rem;
+      background: transparent;
+      color: $mutedColor;
+      cursor: pointer;
+
+      &:hover {
+        background: rgba($primaryColor, 0.4);
+        color: darken($primaryColor, 5);
+      }
+      &.active {
+        color: rgb(255, 255, 255);
+        background: $primaryColor;
+      }
+
+      &.logo {
+        padding: 0px;
+        border-radius: $radius;
+        width: calc(3rem - 10px);
+        height: calc(3rem - 10px);
+        border-radius: 50%;
+        cursor: pointer;
+        box-sizing: content-box;
+        border: 5px solid transparent;
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+        }
+
+        &:hover {
+          background: transparent;
+          border: $border;
+          border-width: 5px;
+        }
+      }
+    }
+  }
+}
+
+.btn {
+  padding: 0.5em 1.25em;
+  border-radius: 25%;
+  color: $mutedColor;
+  background: lighten($mutedColor, 25);
+  font-size: 0.5em;
+  &:hover {
+    background: lighten($mutedColor, 28);
+  }
+
+  &.is-transparent {
+    background: transparent !important;
+    &:hover {
+      color: darken($mutedColor, 20);
+      background: transparent !important;
+    }
+  }
+  &.is-primary-light {
+    background: rgba($primaryColor, 0.2);
+    color: darken($primaryColor, 5);
+    &:hover {
+      background: rgba($primaryColor, 0.4);
+      color: darken($primaryColor, 5);
+    }
+  }
+}
+
+.title {
+  font-size: $lvl3;
+}
+
+header {
+  padding: 1rem 0px;
+  display: flex;
+  font-size: $lvl3;
+  gap: 0.5em;
+  border-bottom: $border;
+  border-width: 2px;
+
+  .title {
+    margin-bottom: 0px;
+  }
+}
+
+.select {
+  position: relative;
+  & > button {
+    padding: 0.5em 3em 0.5em 1em;
+    width: 100%;
+    position: relative;
+    border-radius: 0.5em;
+    font-weight: 600;
+
+    &::after {
+      content: "\f078";
+      position: absolute;
+      right: 1em;
+      font-family: fontawesome;
+    }
+  }
+
+  & > button:focus {
+    border-radius: 0.5em 0.5em 0px 0px;
+  }
+
+  & > button:focus + div {
+    display: flex;
+  }
+  div {
+    width: 100%;
+    position: absolute;
+    display: none;
+    background: lighten($mutedColor, 30);
+    flex-direction: column;
+    button {
+      background: transparent;
+      padding: 0.5em 1em;
+      &:hover {
+        background: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  &.active > button {
+    background: rgba($connectedStatusColor, 0.4);
+    color: darken($connectedStatusColor, 5);
+
+    &:hover {
+      background: rgba($connectedStatusColor, 0.2);
+      color: darken($connectedStatusColor, 5);
+    }
+  }
+
+  &.inactive > button {
+    background: rgba($disconnectedStatusColor, 0.4);
+    color: darken($disconnectedStatusColor, 5);
+
+    &:hover {
+      background: rgba($disconnectedStatusColor, 0.2);
+      color: darken($disconnectedStatusColor, 5);
+    }
+  }
+  &.busy > button {
+    background: rgba($busyStatusColor, 0.4);
+    color: darken($busyStatusColor, 5);
+
+    &:hover {
+      background: rgba($busyStatusColor, 0.2);
+      color: darken($busyStatusColor, 5);
+    }
+  }
+}
+
+nav {
+  min-width: $navWidth;
+  max-width: $navWidth;
+  overflow: hidden;
+  height: 100%;
+  padding: 1rem;
+  transition: all 500ms ease;
+
+  & > * {
+    width: 100%;
+  }
+  .profile-preview {
+    display: flex;
+    gap: 1rem;
+
+    flex-direction: column;
+    align-items: center;
+    height: calc(100% - 70px);
+    width: 100%;
+    position: relative;
+    .settings {
+      position: absolute;
+      font-size: 1rem;
+      background: transparent;
+      right: 0px;
+      top: 1em;
+      color: $mutedColor;
+      &:hover {
+        color: darken($mutedColor, 20);
+      }
+    }
+    .image-profile {
+      transition: all 500ms ease;
+      width: 150px;
+
+      height: 150px;
+      margin-top: 2rem;
+      position: relative;
+      img {
+        width: 150px;
+        height: 150px;
+        border-radius: 75px;
+      }
+      &::after {
+        box-sizing: border-box;
+        border: 2px solid white;
+        content: " ";
+        position: absolute;
+        width: $statusSize;
+        border-radius: $statusSize/2;
+        height: $statusSize;
+        right: 15px;
+        background: $connectedStatusColor;
+        top: 121px;
+      }
+
+      &.inactive {
+        &::after {
+          background: $disconnectedStatusColor;
+        }
+      }
+      &.busy {
+        &::after {
+          background: $busyStatusColor;
+        }
+      }
+    }
+    .chat-actions-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      .sub-title {
+        font-weight: 700;
+        color: $mutedTextColor;
+      }
+
+      .chat-actions {
+        display: flex;
+        gap: 3px;
+        font-size: 1.5em;
+        button {
+          width: 2.5em;
+          padding-right: 0px;
+          padding-left: 0px;
+          text-align: center;
+        }
+      }
+    }
+    .list-chat {
+      height: 100%;
+      width: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      .list-chat-item {
+        width: 100%;
+        &:hover {
+          background: #e2ebea;
+        }
+        cursor: pointer;
+        display: flex;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        align-items: center;
+        justify-content: space-between;
+        color: $mutedTextColor;
+        font-size: $lvl5;
+        &.active {
+          background: lighten($mutedColor, 30);
+        }
+
+        .avatar {
+          width: 40px;
+          height: 40px;
+          position: relative;
+          img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+          }
+          &::after {
+            box-sizing: border-box;
+            border: 2px solid white;
+            content: " ";
+            position: absolute;
+            width: $statusSize;
+            border-radius: $statusSize/2;
+            height: $statusSize;
+            left: 27px;
+            background: $connectedStatusColor;
+            top: 27px;
+          }
+
+          &.inactive {
+            &::after {
+              background: $disconnectedStatusColor;
+            }
+          }
+          &.busy {
+            &::after {
+              background: $busyStatusColor;
+            }
+          }
+        }
+
+        div {
+          width: 120px;
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+          .name {
+            color: $black;
+            font-size: $lvl4;
+          }
+          .preview {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+
+        .date {
+          width: 40px;
+        }
+      }
+    }
+  }
+
+  &.collapsed {
+    min-width: 90px;
+    max-width: 90px;
+    overflow: hidden;
+    height: 100%;
+    padding: 0px;
+
+    header {
+      padding: 1rem;
+      display: block;
+      & > * {
+        display: none;
+      }
+
+      .toogler {
+        transform: rotate(180deg);
+        width: 38px;
+        height: 29px;
+        display: block;
+      }
+    }
+
+    .profile-preview {
+      .settings {
+        display: none;
+      }
+      .image-profile {
+        width: 40px;
+        height: 40px;
+
+        img {
+          width: 40px;
+          height: 40px;
+        }
+        &::after {
+          right: 1px;
+          top: 27px;
+        }
+      }
+      .title {
+        display: none;
+      }
+      .select {
+        display: none;
+      }
+      .search {
+        display: none;
+      }
+
+      .chat-actions-bar {
+        display: none;
+      }
+      .list-chat {
+        .list-chat-item {
+          width: 100%;
+          .avatar {
+            display: block !important;
+          }
+
+          div {
+            display: none;
+          }
+
+          .date {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  nav {
+    min-width: 70px;
+    max-width: 70px;
+    overflow: hidden;
+    height: 100%;
+    padding: 0px;
+    header {
+      display: none;
+    }
+    & > * {
+      width: 100%;
+    }
+    .profile-preview {
+      height: calc(100% - 1rem);
+
+      .settings {
+        display: none;
+      }
+      .image-profile {
+        width: 40px;
+        height: 40px;
+        img {
+          width: 40px;
+          height: 40px;
+        }
+        &::after {
+          right: 1px;
+          top: 27px;
+        }
+      }
+      .title {
+        display: none;
+      }
+      .select {
+        display: none;
+      }
+      .search {
+        display: none;
+      }
+
+      .chat-actions-bar {
+        display: none;
+      }
+      .list-chat {
+        .list-chat-item {
+          width: 100%;
+          .avatar {
+            display: block !important;
+          }
+          div {
+            display: none;
+          }
+
+          .date {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+input[type="text"] {
+  padding: 0.75em 1em;
+  background: lighten($mutedColor, 30);
+  border: 2px solid lighten($mutedColor, 10);
+  box-shadow: 0px 0px 0px rgba($black, 0.1);
+  border-radius: 1em;
+  width: 100%;
+  transition: all 500ms ease;
+  &:focus {
+    border: 2px solid $primaryColor;
+    background: lighten($mutedColor, 50);
+    outline: none;
+  }
+  &:active {
+    border: 2px solid $primaryColor;
+    outline: none;
+  }
+}
+
+input[type="text"]::placeholder {
+  text-transform: capitalize;
+  font-family: $fontFamily;
+}
+
+main {
+  padding: 1rem;
+
+  width: 100%;
+  background: hsl(100, 100%, 29%);
+}
+footer {
+  padding: 1rem;
+
+  background: hsl(200, 100%, 29%);
+}
