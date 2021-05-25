@@ -16,6 +16,8 @@ $lvl3: 1.5rem;
 $lvl4: 1rem;
 $mutedTextColor: darken($mutedColor, 25);
 $lvl5: 0.7rem;
+$messageShadow: 1px 1px 2px #dfe1e8;
+$messageShadowHover: 1px 1px 5px #8f93a1;
 
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap");
 $fontFamily: "Noto Sans JP", sans-serif;
@@ -130,6 +132,14 @@ aside {
     &:hover {
       background: rgba($primaryColor, 0.4);
       color: darken($primaryColor, 5);
+    }
+  }
+  &.is-primary {
+    background: $primaryColor !important;
+    color: #fff !important;
+    &:hover {
+      background: darken($primaryColor, 5) !important;
+      color: #fff !important;
     }
   }
 }
@@ -547,13 +557,280 @@ input[type="text"]::placeholder {
 }
 
 main {
-  padding: 1rem;
-
+  display: flex;
+  flex-direction: column;
+  padding: 0px;
+  margin: 1rem;
   width: 100%;
-  background: hsl(100, 100%, 29%);
+  background: #edf0f5;
+  overflow: hidden;
+  border-radius: 1em;
+  position: relative;
+  header {
+    background: rgba(237, 240, 245, 0.788);
+
+    position: absolute;
+    right: 0px;
+    left: 0px;
+    padding: 0px;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .main-header-title {
+      font-size: 0.8em;
+      padding: 1.2rem;
+    }
+    .main-header-actions {
+      padding: 0px 1rem;
+      display: flex;
+      gap: 5px;
+
+      button {
+        font-size: 0.8em;
+        border-radius: 0.5em;
+        background: rgba(0, 0, 0, 0);
+        padding: 0.5rem 1em;
+        &:hover {
+          background: rgba(0, 0, 0, 0.05);
+        }
+        &.active {
+          &:hover {
+            background: rgba($connectedStatusColor, 0.5);
+          }
+          background: rgba($connectedStatusColor, 0.4);
+          color: darken($connectedStatusColor, 5);
+        }
+      }
+    }
+  }
+
+  .wrapper {
+    height: 100%;
+    overflow-y: scroll;
+    padding: 1rem;
+    z-index: 4;
+    padding-top: 80px;
+    margin-bottom: 70px;
+
+    .message-wrapper {
+      margin: 1em 0px;
+      display: flex;
+      flex-direction: column;
+      &.me {
+        .message-data {
+          align-self: flex-end;
+
+          .message-avatar {
+            display: none;
+          }
+          .message-content {
+            .message-content-text {
+              background: #d0d3e3;
+              &:last-of-type {
+                &:before {
+                  display: none;
+                }
+                &:after {
+                  position: absolute;
+                  content: "";
+                  bottom: 0px;
+                  z-index: 7;
+                  right: -0.5em;
+                  border: 15px transparent solid;
+                  border-bottom: 15px solid #d0d3e3;
+                }
+              }
+            }
+          }
+        }
+      }
+      &:hover {
+        .message-info {
+          opacity: 1;
+          transform: translateY(0px);
+        }
+      }
+      .message-info {
+        font-size: 0.7em;
+        text-align: center;
+        z-index: 5;
+        position: relative;
+        transition: 500ms ease-in-out;
+        transform: translateY(1em);
+        opacity: 0;
+      }
+      .message-data {
+        position: relative;
+        z-index: 6;
+        display: flex;
+        gap: 1em;
+        align-items: flex-end;
+        .message-avatar {
+          width: 40px;
+          height: 40px;
+          border: 5px solid #ffffff;
+          border-radius: 20px;
+        }
+        .message-content {
+          font-size: 0.9em;
+          .message-content-text {
+            &:hover {
+              filter: drop-shadow($messageShadowHover);
+              z-index: 8;
+            }
+            margin-top: 0.5em;
+            padding: 1em;
+            background: #ffffff;
+            border-radius: 0.5rem;
+            transition: filter 500ms ease-in-out;
+            filter: drop-shadow($messageShadow);
+            z-index: 7;
+            &:last-of-type {
+              position: relative;
+              &:before {
+                position: absolute;
+                content: "";
+                bottom: 0px;
+                left: -0.5em;
+                border: 15px transparent solid;
+                border-bottom: 15px solid #ffffff;
+              }
+            }
+            .message-content-attachement {
+              margin-top: 1em;
+              display: flex;
+              border: 1px solid rgb(228, 228, 228);
+              border-radius: 0.5em;
+              background: #fff;
+              & > span {
+                padding: 0.5em;
+                width: 100%;
+                span {
+                  margin-left: 10px;
+                }
+              }
+              button {
+                transition: 300ms ease-in-out;
+                padding: 0em 1em;
+                border-radius: 0px 0.5em 0.5em 0px;
+                border-left: 1px solid rgb(228, 228, 228);
+                background: #fff;
+                &:hover {
+                  background: $primaryColor;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .is-writing {
+      // position: absolute;
+      margin-bottom: 10px;
+      bottom: 75px;
+      display: flex;
+      align-items: center;
+      gap: 1em;
+      .is-writing-icon {
+        width: 35px;
+        height: 35px;
+        background-color: #ffffff;
+        border-radius: 25px;
+        padding: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        span {
+          width: 5px;
+          height: 5px;
+          background: lighten($mutedTextColor, 20);
+          animation: bounce 0.5s linear infinite alternate-reverse;
+          border-radius: 50%;
+          &:first-of-type {
+            background: $mutedTextColor;
+            animation-delay: -200ms;
+          }
+          &:last-of-type {
+            animation-delay: 200ms;
+            background: $mutedTextColor;
+          }
+        }
+      }
+      span {
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  .new-message {
+    position: absolute;
+    filter: drop-shadow($messageShadowHover);
+    right: 1em;
+    left: 1em;
+    bottom: 1em;
+    height: 3rem;
+    display: flex;
+    textarea {
+      width: 100%;
+      resize: none;
+      padding: 1rem;
+      line-height: 1rem;
+      font-size: 1rem;
+      font-family: $fontFamily;
+      border-radius: 0.5rem 0px 0px 0.5rem;
+      &:active,
+      &:focus {
+        border-radius: 0.5rem 0px 0px 0.5rem;
+        outline: none;
+      }
+    }
+    //       <textarea placeholder='Whrite your message ...'></textarea>
+    .new-message-actions {
+      border-radius: 0px 0.5rem 0.5rem 0px;
+      display: flex;
+      background: #fff;
+      gap: 5px;
+      padding: 5px;
+      button {
+        width: calc(3rem - 10px);
+        height: calc(3rem - 10px);
+        padding: 0.5rem !important;
+        color: rgba($mutedColor, 0.8);
+        transition: 300ms ease-in-out;
+        background: transparent;
+        font-size: 0.9em !important;
+        text-align: center;
+
+        &:hover {
+          color: $mutedTextColor;
+        }
+      }
+    }
+    //       <>
+    //         <i className='fas fa-laugh'></i>
+    //       </button>
+    //       <button>
+    //         <i className='fas fa-paperclip'></i>
+    //       </button>
+    //       <button>
+    //         <i className='fas fa-paper-plane'></i>
+    //       </button>
+  }
 }
 footer {
   padding: 1rem;
 
   background: hsl(200, 100%, 29%);
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(-3px);
+  }
+
+  100% {
+    transform: translateY(3px);
+  }
 }

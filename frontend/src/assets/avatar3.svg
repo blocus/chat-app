@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="128.1963mm" height="128.1963mm"
+   viewBox="0 0 128.1963 128.1963" version="1.1" id="svg8" inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="avatar.svg"
+   inkscape:export-filename="/home/meftah/Projects/chat-app/frontend/src/assets/avatar1.png" inkscape:export-xdpi="508"
+   inkscape:export-ydpi="508">
+   <defs id="defs2" />
+   <sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0"
+      inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="0.7" inkscape:cx="253.8871"
+      inkscape:cy="302.80677" inkscape:document-units="mm" inkscape:current-layer="layer1"
+      inkscape:document-rotation="0" showgrid="false" inkscape:window-width="1920" inkscape:window-height="1054"
+      inkscape:window-x="0" inkscape:window-y="0" inkscape:window-maximized="1" />
+   <metadata id="metadata5">
+      <rdf:RDF>
+         <cc:Work rdf:about="">
+            <dc:format>image/svg+xml</dc:format>
+            <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+            <dc:title></dc:title>
+         </cc:Work>
+      </rdf:RDF>
+   </metadata>
+   <g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" transform="translate(-27.967819,-60.011978)">
+      <rect style="fill:#03aaaa;fill-opacity:1;stroke-width:2.391;stroke-linecap:square;paint-order:markers fill stroke"
+         id="rect833" width="128.1963" height="128.1963" x="27.967819" y="60.011978" />
+      <path id="rect861"
+         style="fill:#ffffff;fill-opacity:1;stroke-width:9.03685;stroke-linecap:square;paint-order:markers fill stroke"
+         d="m 61.337891,62.03125 a 174.37761,174.37761 0 0 0 -174.376951,174.37891 174.37761,174.37761 0 0 0 13.464841,67.1875 H 222.25195 A 174.37761,174.37761 0 0 0 235.71484,236.41016 174.37761,174.37761 0 0 0 61.337891,62.03125 Z"
+         transform="matrix(0.26458333,0,0,0.26458333,75.837011,107.88117)" />
+      <circle
+         style="fill:#ffffff;fill-opacity:1;stroke-width:3.38349;stroke-linecap:square;paint-order:markers fill stroke"
+         id="circle837" cx="91.25087" cy="104.09663" r="22.965469" />
+   </g>
+</svg>
