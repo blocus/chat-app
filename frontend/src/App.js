@@ -1,11 +1,18 @@
-import Sidebar from './components/Sidebar'
-import Chat from './views/Chat'
+import { Route, Switch } from 'react-router-dom'
+import Auth from './views/Auth'
+import Dashboard from './views/Dashboard'
+
 function App() {
   return (
-    <>
-      <Sidebar />
-      <Chat />
-    </>
+    <Switch>
+      <Route path='/auth'>
+        <Auth />
+      </Route>
+
+      <Route>
+        <Dashboard />
+      </Route>
+    </Switch>
   )
 }
 
