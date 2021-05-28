@@ -66,6 +66,42 @@ function Message(props) {
   )
 }
 
+function UploadProgress(props) {
+  let value
+  if (props.value === undefined) return <></>
+  if (props.value > 100) value = 100
+  else if (props.value < 0) value = 0
+  else value = props.value
+  return (
+    <div className='progress-container'>
+      <span className='progress-value'>{value}</span>
+      <progress value={value} max='100'></progress>
+      <button className='is-dark'>
+        <i className='fas fa-pause'></i>
+      </button>
+      <button className='is-danger'>
+        <i className='fas fa-times'></i>
+      </button>
+      <button>
+        <i className='fas fa-times'></i>
+      </button>
+    </div>
+  )
+}
+
+function IsWriting(props) {
+  return (
+    <div className='is-writing'>
+      <div className='is-writing-icon'>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <span>Some one is typing</span>
+    </div>
+  )
+}
+
 function ChatArea() {
   return (
     <main>
@@ -80,14 +116,8 @@ function ChatArea() {
         {messages.map((e, k) => (
           <Message {...e} key={k} />
         ))}
-        <div className='is-writing'>
-          <div className='is-writing-icon'>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <span>Some one is typing</span>
-        </div>
+        <IsWriting />
+        <UploadProgress value='50' />
       </div>
       <div className='new-message'>
         <textarea placeholder='Whrite your message ...'></textarea>

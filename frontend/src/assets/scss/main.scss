@@ -808,15 +808,6 @@ main {
         }
       }
     }
-    //       <>
-    //         <i className='fas fa-laugh'></i>
-    //       </button>
-    //       <button>
-    //         <i className='fas fa-paperclip'></i>
-    //       </button>
-    //       <button>
-    //         <i className='fas fa-paper-plane'></i>
-    //       </button>
   }
 }
 footer {
@@ -832,5 +823,58 @@ footer {
 
   100% {
     transform: translateY(3px);
+  }
+}
+
+.progress-container {
+  display: flex;
+  gap: 1rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: darken($mutedTextColor, 20);
+  box-shadow: $messageShadowHover;
+  margin: 1rem 0px;
+  align-items: center;
+  .progress-value {
+    &:after {
+      content: "%";
+    }
+  }
+
+  progress {
+    height: 4px;
+    border-radius: 3px;
+    width: 100%;
+    background: lighten($mutedColor, 20);
+    &::-moz-progress-bar,
+    &::-webkit-progress-bar {
+      border-radius: 3px;
+      background: $primaryColor;
+    }
+  }
+  button {
+    display: block;
+    color: $mutedColor;
+    width: 40px;
+    min-width: 40px;
+    border-radius: 50%;
+    height: 40px;
+    min-height: 40px;
+    transition: 300ms ease-in-out;
+    &.is-dark {
+      color: lighten($mutedTextColor, 15);
+      background: lighten($mutedTextColor, 40);
+      &:hover {
+        background: lighten($mutedTextColor, 45);
+      }
+    }
+    &.is-danger {
+      color: lighten($disconnectedStatusColor, 15);
+      background: lighten($disconnectedStatusColor, 40);
+      &:hover {
+        background: lighten($disconnectedStatusColor, 45);
+      }
+    }
   }
 }
