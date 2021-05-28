@@ -27,7 +27,7 @@ const messages = Array.from({ length: 30 })
     })),
     date: genRandomDate(),
   }))
-  .sort((a, b) => a.date - b.date)
+  .sort((a, b) => b.date - a.date)
 
 function Message(props) {
   const Attachement = ({ attachement }) => {
@@ -113,11 +113,11 @@ function ChatArea() {
         </div>
       </header>
       <div className='wrapper'>
+        <UploadProgress value='50' />
+        <IsWriting />
         {messages.map((e, k) => (
           <Message {...e} key={k} />
         ))}
-        <IsWriting />
-        <UploadProgress value='50' />
       </div>
       <div className='new-message'>
         <textarea placeholder='Whrite your message ...'></textarea>
