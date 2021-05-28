@@ -1,4 +1,5 @@
 import ChatArea from '../../components/ChatArea'
+import ChatMeta from '../../components/ChatMeta'
 import Navigation from '../../components/Navigation'
 
 function Chat() {
@@ -6,7 +7,7 @@ function Chat() {
     <div id='wrapper'>
       <Navigation></Navigation>
       <ChatArea />
-      <footer></footer>
+      <ChatMeta />
     </div>
   )
 }

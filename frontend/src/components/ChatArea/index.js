@@ -120,7 +120,7 @@ function ChatArea() {
         ))}
       </div>
       <div className='new-message'>
-        <textarea placeholder='Whrite your message ...'></textarea>
+        <textarea placeholder='Write your message ...'></textarea>
         <div className='new-message-actions'>
           <button>
             <i className='fas fa-laugh'></i>
