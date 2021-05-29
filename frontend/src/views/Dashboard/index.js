@@ -10,28 +10,28 @@ function Dashboard(props) {
       <div id='wrapper'>
         <Switch>
           <Route path='/' exact>
-            <CommingSoon />
+            <CommingSoon title='Home' />
           </Route>
           <Route path='/files'>
-            <CommingSoon />
+            <CommingSoon title='Files' />
           </Route>
           <Route path='/tasks'>
-            <CommingSoon />
+            <CommingSoon title='Tasks' />
           </Route>
           <Route path='/events'>
-            <CommingSoon />
+            <CommingSoon title='Events' />
           </Route>
           <Route path='/stats'>
-            <CommingSoon />
+            <CommingSoon title='Stats' />
           </Route>
           <Route path='/video-call'>
-            <CommingSoon />
+            <CommingSoon title='VideoCall' />
           </Route>
           <Route path='/profile'>
-            <CommingSoon />
+            <CommingSoon title='Profile' />
           </Route>
           <Route path='/settings'>
-            <CommingSoon />
+            <CommingSoon title='Settings' />
           </Route>
           <Route path='/chat'>
             <Chat />

@@ -1,7 +1,12 @@
-function CommingSoon() {
+function CommingSoon(props) {
   return (
     <div id='comming-soon'>
       <h1>Comming Soon</h1>
+      <h2>
+        Page {'<'}
+        <code>{props.title}</code>
+        {'>'} is under constraction
+      </h2>
       <div id='screen'>
         <span className='style1'>f</span>
         <span className='style1'>u</span>

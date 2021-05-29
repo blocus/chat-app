@@ -1475,6 +1475,11 @@ input[type="password"]::placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
+  h2 {
+    background: #141925;
+    padding: 0.25em;
+    color: #b3b1ad;
+  }
 
   #screen {
     margin-top: 1em;
@@ -1549,6 +1554,13 @@ input[type="password"]::placeholder {
     color: #04ac9b;
     font-family: "Noto Sans JP", sans-serif;
   }
+}
+
+code {
+  background: #141925;
+  padding: 0.25em;
+  border-radius: 0.5em;
+  color: #f13e80;
 }
 
 @keyframes blink {
