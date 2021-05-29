@@ -1,11 +1,4 @@
 function App() {
-  const style1 = {
-    fill: '#141925',
-  }
-
-  const style2 = {
-    fill: '#04ac9b',
-  }
   return (
     <div id='comming-soon'>
       <h1>Comming Soon</h1>
