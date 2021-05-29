@@ -2,12 +2,12 @@ import logo from '../../assets/logo.svg'
 import { Link, NavLink } from 'react-router-dom'
 
 const links = [
-  { icon: 'far fa-clock', link: '/', exact: true },
-  { icon: 'far fa-calendar-check', link: '/', exact: true },
-  { icon: 'far fa-eye', link: '/', exact: true },
-  { icon: 'fas fa-user-friends', link: '/chat', exact: false },
-  { icon: 'fas fa-chart-bar', link: '/', exact: true },
-  { icon: 'fas fa-video', link: '/', exact: true },
+  { icon: 'far fa-calendar-check', link: '/tasks' },
+  { icon: 'far fa-calendar', link: '/events' },
+  { icon: 'fas fa-user-friends', link: '/chat' },
+  { icon: 'fas fa-chart-bar', link: '/stats' },
+  { icon: 'fas fa-video', link: '/video-call' },
+  { icon: 'far fa-file', link: '/files' },
 ]
 
 const userLinks = [
@@ -26,13 +26,13 @@ function Sidebar() {
       </div>
       <div>
         {links.map((e, k) => (
-          <NavLink key={k} to={e.link} exact={e.exact}>
+          <NavLink key={k} to={e.link}>
             <i className={e.icon}></i>
           </NavLink>
         ))}
       </div>
       <div className='dropdown'>
-        <button className='logo'>
+        <button className='toogler logo'>
           <img src='https://picsum.photos/50' alt='avatar'></img>
         </button>
         <div className='dropdown-menue'>

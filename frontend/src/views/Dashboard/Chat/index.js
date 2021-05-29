@@ -4,11 +4,11 @@ import Navigation from '../../../components/Navigation'
 
 function Chat() {
   return (
-    <div id='wrapper'>
+    <>
       <Navigation />
       <ChatArea />
       <ChatMeta />
-    </div>
+    </>
   )
 }
 

@@ -21,6 +21,8 @@ $messageShadow: 1px 1px 2px #dfe1e8;
 $messageShadowHover: 1px 1px 5px #8f93a1;
 $icons: "copy", "image", "film", "music", "archive", "file", "link";
 
+$zDropDown: 100;
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -60,6 +62,53 @@ $fontFamily: "Noto Sans JP", sans-serif;
   padding: 0px;
   border: 0px;
   box-sizing: border-box;
+}
+
+.dropdown {
+  position: relative;
+  &:hover {
+    .dropdown-menue {
+      display: block;
+    }
+  }
+  .toogler:focus + .dropdown-menue {
+    display: block;
+  }
+
+  .toogler:active + .dropdown-menue {
+    display: block;
+  }
+  .toogler:hover + .dropdown-menue {
+    display: block;
+  }
+  .dropdown-menue {
+    text-align: center;
+    z-index: $zDropDown;
+    display: none;
+    position: absolute;
+    background: #fff;
+    border: $border;
+    border-radius: 5px;
+    box-shadow: $messageShadowHover;
+    bottom: 0px;
+    left: 100%;
+    font-size: 1rem;
+
+    a,
+    button {
+      display: block;
+      width: auto;
+      height: auto;
+      padding: 0.5em 2em;
+      font-size: inherit;
+      color: $primaryColor;
+      border-radius: 0px;
+      &:hover {
+        text-decoration: underline;
+        background: rgba($primaryColor, 0.1);
+      }
+    }
+  }
 }
 
 html,
@@ -113,8 +162,10 @@ aside {
       background: transparent;
       color: $mutedColor;
       cursor: pointer;
+      text-decoration: none;
 
       &:hover {
+        text-decoration: none;
         background: rgba($primaryColor, 0.4);
         color: darken($primaryColor, 5);
       }
@@ -1381,6 +1432,15 @@ input[type="password"]::placeholder {
             border: none;
           }
         }
+      }
+    }
+
+    .dropdown {
+      .dropdown-menue {
+        top: 100%;
+        bottom: auto;
+        left: auto;
+        right: 0px;
       }
     }
   }
