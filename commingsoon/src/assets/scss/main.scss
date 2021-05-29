@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Anonymous+Pro&display=swap");
 * {
   margin: 0px;
   padding: 0px;
@@ -43,62 +43,109 @@ body,
   display: flex;
   align-items: center;
   justify-content: center;
+
+  #screen {
+    background: #141925;
+    border: 10px solid #04ac9b;
+    border-radius: 10px;
+    font-size: 1.5em;
+    padding: 2rem;
+    span {
+      font-family: "Anonymous Pro", monospace;
+      color: #b3b1ad;
+      animation: blink 100ms linear forwards;
+      opacity: 0;
+      @for $var from 1 to 150 {
+        &:nth-child(#{$var}) {
+          animation-delay: 100ms * $var;
+        }
+      }
+
+      &.last {
+        background: #fff;
+        color: #fff;
+        animation: cursor 1s linear forwards 11300ms infinite;
+      }
+      &.style1 {
+        color: #ffa759;
+      }
+      &.style2 {
+        color: #e8ba5f;
+      }
+      &.style3 {
+        color: #d4bfff;
+      }
+      &.style4 {
+        color: #f07178;
+      }
+      &.style5 {
+        color: #f9c764;
+      }
+      &.style6 {
+        color: #bae67e;
+      }
+      &.style7 {
+        color: #f13e80;
+      }
+      &.style8 {
+        color: #ff6188;
+      }
+      &.style9 {
+        color: #263861;
+      }
+      &.return::after {
+        content: "\A";
+        white-space: pre;
+      }
+      &.pad-1::before {
+        white-space: pre;
+        content: "  ";
+      }
+      &.pad-2::before {
+        white-space: pre;
+        content: "    ";
+      }
+      &.pad-3::before {
+        white-space: pre;
+        content: "      ";
+      }
+    }
+  }
+
   h1 {
     color: #04ac9b;
     font-family: "Noto Sans JP", sans-serif;
   }
-
-  svg {
-    width: 400px;
-    height: 420px;
-    .svg-style1 {
-      fill: #ffa759;
-    }
-
-    .svg-style2 {
-      fill: #e8ba5f;
-    }
-
-    .svg-style3 {
-      fill: #d4bfff;
-    }
-
-    .svg-style4 {
-      fill: #f07178;
-    }
-
-    .svg-style5 {
-      fill: #f9c764;
-    }
-    .svg-style6 {
-      fill: #bae67e;
-    }
-    .svg-style7 {
-      fill: #f13e80;
-    }
-    .svg-style8 {
-      fill: #b3b1ad;
-    }
-  }
 }
 
-#comming-soon-characters {
-  path {
-    animation: blink 100ms linear forwards;
-    opacity: 0;
-    @for $var from 1 to 100 {
-      &:nth-child(#{$var}) {
-        animation-delay: 100ms * $var;
-        animation-delay: 100ms * $var;
-      }
-    }
-  }
-}
 @keyframes blink {
   0% {
-    opacity: 0;
+    background: #fff;
+    color: #fff;
+    opacity: 1;
+  }
+  50% {
+    background: #fff;
+    color: #fff;
+    opacity: 1;
+  }
+  51% {
+    background: transparent;
+    opacity: 1;
   }
   100% {
     opacity: 1;
+  }
+}
+
+@keyframes cursor {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
