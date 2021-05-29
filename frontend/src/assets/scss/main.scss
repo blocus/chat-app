@@ -1467,3 +1467,70 @@ input[type="password"]::placeholder {
     background-position: -50px 0px;
   }
 }
+
+#comming-soon {
+  width: 100%;
+  height: 100%;
+  background: white;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  h1 {
+    color: $primaryColor;
+  }
+
+  svg {
+    width: 400px;
+    height: 420px;
+    .svg-style1 {
+      fill: #ffa759;
+    }
+
+    .svg-style2 {
+      fill: #e8ba5f;
+    }
+
+    .svg-style3 {
+      fill: #d4bfff;
+    }
+
+    .svg-style4 {
+      fill: #f07178;
+    }
+
+    .svg-style5 {
+      fill: #f9c764;
+    }
+    .svg-style6 {
+      fill: #bae67e;
+    }
+    .svg-style7 {
+      fill: #f13e80;
+    }
+    .svg-style8 {
+      fill: #b3b1ad;
+    }
+  }
+}
+
+#comming-soon-characters {
+  path {
+    animation: blink 100ms linear forwards;
+    opacity: 0;
+    @for $var from 1 to 100 {
+      &:nth-child(#{$var}) {
+        animation-delay: 100ms * $var;
+        animation-delay: 100ms * $var;
+      }
+    }
+  }
+}
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
