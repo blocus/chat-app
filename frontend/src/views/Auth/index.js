@@ -7,7 +7,7 @@ import logo from '../../assets/logo.svg'
 import { Route, Switch, Link, Redirect } from 'react-router-dom'
 
 function CardHeader(props) {
-  const title = props.title ?? 'Welcome to 7mema.com'
+  const title = props.title ?? 'Welcome to doveme.space'
   const subTitle = props.subTitle ?? 'Already a User ?'
   return (
     <div className='auth-container-card-header'>

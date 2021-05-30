@@ -1594,3 +1594,80 @@ code {
     opacity: 0;
   }
 }
+
+#waiting {
+  width: 100vw;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background: rgb(177, 218, 252);
+
+  #cloud1 {
+    position: absolute;
+    top: 0px;
+    width: 100px;
+    height: 50px;
+    animation: cloud 5s ease-in-out infinite;
+  }
+  #cloud2 {
+    position: absolute;
+    width: 100px;
+    top: 30%;
+    height: 50px;
+    animation: cloud 6s linear infinite;
+  }
+  #cloud3 {
+    width: 25%;
+    top: 50%;
+    position: absolute;
+    animation: cloud 3s ease-in-out infinite;
+  }
+  #cloud4 {
+    z-index: 30;
+    width: 300px;
+    position: absolute;
+    animation: cloud 7s ease-in-out infinite;
+  }
+  #waiting-logo {
+    z-index: 20;
+    width: 200px;
+    animation: fly 2s ease-in-out infinite;
+  }
+}
+
+@keyframes fly {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-50px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes cloud {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100vw;
+  }
+}
+
+#landing {
+  gap: 1rem;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  #comming-soon {
+    height: auto;
+  }
+}

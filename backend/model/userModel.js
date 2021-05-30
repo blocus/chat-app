@@ -36,7 +36,7 @@ UserSchema.methods.toJSON = function () {
 }
 
 UserSchema.methods.refreshToken = function (refresh_token) {
-  // I should veriy if token exists in redis database by when i will have time i will do it
+  // TODO : I should veriy if token exists in redis database by when i will have time i will do it
   return jwt.verify(refresh_token, JWT_REFRESH_SECRET, async (err, decoded) => {
     if (err) return { status: 401 }
     const userId = decoded.id

@@ -2,8 +2,10 @@ import Sidebar from '../../components/Sidebar'
 import Chat from './Chat'
 import { Switch, Route } from 'react-router-dom'
 import CommingSoon from '../../components/CommingSoon'
+import LandingPage from '../LandingPage'
 
 function Dashboard(props) {
+  if (!props.user) return <LandingPage />
   return (
     <>
       <Sidebar />
