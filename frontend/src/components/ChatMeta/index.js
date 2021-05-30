@@ -23,7 +23,7 @@ function ChatMeta() {
         <span className='title'>Shared files</span>
       </header>
       <div className='info'>
-        <img src='https://picsum.photos/300' alt='group-avatar'></img>
+        <img src='/assets/images/default_conversation.png' alt='group-avatar'></img>
         <div className='info-title'>Group Name</div>
         <div className='info-description'>{number} Members</div>
       </div>

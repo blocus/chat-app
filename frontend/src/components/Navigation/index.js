@@ -1,10 +1,14 @@
 import { useState } from 'react'
-import { genRandomDate, formatDate, genRandomString } from '../../helpers'
+import { formatDate } from '../../helpers'
+import Loading from '../../components/Loading'
+import axios from 'axios'
+import { NavLink } from 'react-router-dom'
 const status = {
   C: { key: 'C', label: 'Connected', class: 'active' },
   B: { key: 'B', label: 'Busy', class: 'busy' },
   D: { key: 'D', label: 'Disconected', class: 'inactive' },
 }
+
 function StatusChanger({ user, handleStatus }) {
   const currentStatus = Object.keys(status).includes(user.status) ? user.status : 'C'
 
@@ -22,9 +26,61 @@ function StatusChanger({ user, handleStatus }) {
   )
 }
 
-function Navigation({ user, handleStatus }) {
-  const currentStatus = Object.keys(status).includes(user.status) ? user.status : 'C'
+function ConversationList(props) {
+  if (props.conversationsLoading)
+    return (
+      <div className='list-chat is-waiting'>
+        <Loading />
+      </div>
+    )
 
+  if (props.conversations.length === 0)
+    return (
+      <div className='list-chat is-waiting'>
+        <span className='text-muted'>You have no conversations</span>
+      </div>
+    )
+  return (
+    <div className='list-chat'>
+      {props.conversations
+        .sort((a, b) => b.date - a.date)
+        .map((item, key) => (
+          <NavLink className='list-chat-item' key={key} to={`/chat/${item.id}`}>
+            <div className='avatar'>
+              <img src={item.avatar} alt='avatar'></img>
+            </div>
+            <div>
+              <span className='name'>{item.name}</span>
+              {item.seen ? (
+                <span className='preview'>
+                  <b>{item.preview}</b>
+                </span>
+              ) : (
+                <span className='preview'>{item.preview}</span>
+              )}
+            </div>
+            <span className='date'>{formatDate(item.date)}</span>
+          </NavLink>
+        ))}
+    </div>
+  )
+}
+
+function Navigation({
+  user,
+  handleStatus,
+  conversations,
+  conversationsLoading,
+  handleConversation,
+}) {
+  const currentStatus = Object.keys(status).includes(user.status) ? user.status : 'C'
+  const createConversation = () => {
+    let userId = '60b394eb11da5b0a511afc9d'
+    userId = '60b396c615f52610ee717265'
+    userId = '60b396cf15f52610ee717266'
+    userId = '60b396d715f52610ee717267'
+    axios.post(`/conversation/${userId}`).then(res => handleConversation(res.data))
+  }
   const [toogled, setToogled] = useState(false)
   const toogle = () => setToogled(!toogled)
   return (
@@ -49,7 +105,7 @@ function Navigation({ user, handleStatus }) {
         <div className='chat-actions-bar'>
           <span className='sub-title'>Last chats</span>
           <div className='chat-actions'>
-            <button className='btn is-primary-light'>
+            <button className='btn is-primary-light' onClick={createConversation}>
               <i className='fas fa-plus'></i>
             </button>
             <button className='btn is-transparent'>
@@ -57,28 +113,10 @@ function Navigation({ user, handleStatus }) {
             </button>
           </div>
         </div>
-        <div className='list-chat'>
-          {Array.from({ length: 20 })
-            .map((_, k) => ({
-              avatar: 'https://picsum.photos/50',
-              date: genRandomDate(),
-              name: `User ${k + 1}`,
-              preview: genRandomString(),
-            }))
-            .sort((a, b) => b.date - a.date)
-            .map((item, key) => (
-              <div key={key} className={`list-chat-item${key === 0 ? ' active' : ''}`}>
-                <div className='avatar'>
-                  <img src={item.avatar} alt='avatar'></img>
-                </div>
-                <div>
-                  <span className='name'>{item.name}</span>
-                  <span className='preview'>{item.preview}</span>
-                </div>
-                <span className='date'>{formatDate(item.date)}</span>
-              </div>
-            ))}
-        </div>
+        <ConversationList
+          conversations={conversations}
+          conversationsLoading={conversationsLoading}
+        />
       </div>
     </nav>
   )

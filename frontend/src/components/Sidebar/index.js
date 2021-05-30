@@ -17,7 +17,6 @@ const userLinks = [
 ]
 
 function Sidebar({ user }) {
-  console.log(user)
   return (
     <aside>
       <div>

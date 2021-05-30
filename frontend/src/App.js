@@ -7,55 +7,6 @@ import axios from 'axios'
 import params from './params.json'
 import socketIOClient from 'socket.io-client'
 
-/*
-
-import React, { Component } from "react";
-
-class App extends Component {
- 
-
-  // sending sockets
-  send = () => {
-   
-    socket.emit('change color', this.state.color) // change 'red' to this.state.color
-  }
-  ///
-
-  // adding the function
-  setColor = (color) => {
-    this.setState({ color })
-  }
-
-  componentDidMount = () => {
-      const socket = socketIOClient(params.baseUrl);
-      setInterval(this.send(), 1000)
-      socket.on('change color', (col) => {
-          document.body.style.backgroundColor = col
-      })
-  }
-
-  render() {
-    // testing for socket connections
-
-    const socket = socketIOClient(params.baseUrl);
-
-    return (
-      <div style={{ textAlign: "center" }}>
-        <button onClick={() => this.send() }>Change Color</button>
-
-
-
-        <button id="blue" onClick={() => this.setColor('blue')}>Blue</button>
-        <button id="red" onClick={() => this.setColor('red')}>Red</button>
-
-      </div>
-    )
-  }
-}
-export default App;
-
-*/
-
 class App extends Component {
   state = {
     user: null,
