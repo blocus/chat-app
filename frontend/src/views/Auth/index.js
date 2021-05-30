@@ -30,12 +30,24 @@ function CardFooter({ links }) {
   )
 }
 
-function Logout(props) {
+function Logout({ handleLogout }) {
+  handleLogout()
   return <Redirect to='/auth/login' />
 }
 
-function Auth({ handleLogin, user }) {
-  if (user) return <Redirect to='/' />
+function Auth({ handleLogin, handleLogout, user }) {
+  if (user)
+    return (
+      <Switch>
+        <Route path='/auth/logout' exact>
+          <Logout handleLogout={handleLogout} />
+        </Route>
+        <Route>
+          <Redirect to='/' />
+        </Route>
+      </Switch>
+    )
+
   return (
     <div className='auth-container'>
       <div className='auth-container-card'>
@@ -81,7 +93,7 @@ function Auth({ handleLogin, user }) {
             />
           </Route>
           <Route path='/auth/logout' exact>
-            <Logout />
+            <Logout handleLogout={handleLogout} />
           </Route>
           <Route>
             <Redirect to='/auth/login' />

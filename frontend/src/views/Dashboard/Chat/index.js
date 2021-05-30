@@ -2,10 +2,10 @@ import ChatArea from '../../../components/ChatArea'
 import ChatMeta from '../../../components/ChatMeta'
 import Navigation from '../../../components/Navigation'
 
-function Chat() {
+function Chat({ user, handleStatus }) {
   return (
     <>
-      <Navigation />
+      <Navigation handleStatus={handleStatus} user={user} />
       <ChatArea />
       <ChatMeta />
     </>

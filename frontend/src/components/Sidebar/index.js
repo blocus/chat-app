@@ -16,7 +16,8 @@ const userLinks = [
   { text: 'Logout', link: '/auth/logout' },
 ]
 
-function Sidebar() {
+function Sidebar({ user }) {
+  console.log(user)
   return (
     <aside>
       <div>
@@ -33,7 +34,7 @@ function Sidebar() {
       </div>
       <div className='dropdown'>
         <button className='toogler logo'>
-          <img src='https://picsum.photos/50' alt='avatar'></img>
+          <img src={user.avatar} alt='avatar'></img>
         </button>
         <div className='dropdown-menue'>
           {userLinks.map((e, k) => (

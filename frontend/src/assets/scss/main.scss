@@ -348,11 +348,15 @@ header {
     }
   }
 
-  & > button:focus {
+  &:focus > button,
+  &:hover > button,
+  &:active > button {
     border-radius: 0.5em 0.5em 0px 0px;
   }
 
-  & > button:focus + div {
+  &:focus div,
+  &:hover div,
+  &:active div {
     display: flex;
   }
   div {
@@ -812,6 +816,7 @@ main {
     z-index: 4;
     padding-top: 80px;
     margin-bottom: 70px;
+    margin-top: 70px;
 
     .message-wrapper {
       margin: 1em 0px;

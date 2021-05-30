@@ -8,7 +8,7 @@ function Dashboard(props) {
   if (!props.user) return <LandingPage />
   return (
     <>
-      <Sidebar />
+      <Sidebar user={props.user} />
       <div id='wrapper'>
         <Switch>
           <Route path='/' exact>
@@ -36,7 +36,7 @@ function Dashboard(props) {
             <CommingSoon title='Settings' />
           </Route>
           <Route path='/chat'>
-            <Chat />
+            <Chat handleStatus={props.handleUserStatus} user={props.user} />
           </Route>
         </Switch>
       </div>

@@ -11,16 +11,25 @@ const emailre =
 
 const generateRandomString = () => 'thisShouldBeARandomString'
 
-const UserSchema = Schema({
-  username: { type: String, required: true, unique: true, set: v => v.toLowerCase() },
-  password: { type: String, required: true, set: p => bcryptjs.hashSync(p, 12) },
-  is_verified_email: { type: Boolean, default: true },
-  name: { type: String, default: '' },
-  last: { type: String, default: '' },
-  verification_token: { type: String },
-  avatar: { type: String, default: '/assets/images/default_avatar.png' },
-  email: { type: String, unique: true, set: v => v.toLowerCase(), validate: v => emailre.test(v) },
-})
+const UserSchema = Schema(
+  {
+    username: { type: String, required: true, unique: true, set: v => v.toLowerCase() },
+    password: { type: String, required: true, set: p => bcryptjs.hashSync(p, 12) },
+    is_verified_email: { type: Boolean, default: true },
+    name: { type: String, default: '' },
+    last: { type: String, default: '' },
+    verification_token: { type: String },
+    avatar: { type: String, default: '/assets/images/default_avatar.png' },
+    email: {
+      type: String,
+      unique: true,
+      set: v => v.toLowerCase(),
+      validate: v => emailre.test(v),
+    },
+    status: { type: String, enum: ['C', 'B', 'D'] },
+  },
+  { timestamps: true }
+)
 
 UserSchema.methods.verifyPassword = function (password) {
   return bcryptjs.compareSync(password, this.password)
@@ -30,10 +39,12 @@ UserSchema.methods.toJSON = function () {
   return {
     id: this._id,
     username: this.username,
+    fullname: this.fullName,
     name: this.name,
     last: this.last,
     avatar: this.avatar,
     email: this.email,
+    status: this.status,
   }
 }
 
@@ -51,6 +62,11 @@ UserSchema.methods.refreshToken = function (refresh_token) {
       })
   })
 }
+
+UserSchema.virtual('fullName').get(function () {
+  if (this.name && this.last) return this.name + ' ' + this.last
+  return this.username
+})
 
 UserSchema.methods.generateAccessToken = function () {
   return {

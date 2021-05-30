@@ -1,7 +1,30 @@
 import { useState } from 'react'
 import { genRandomDate, formatDate, genRandomString } from '../../helpers'
+const status = {
+  C: { key: 'C', label: 'Connected', class: 'active' },
+  B: { key: 'B', label: 'Busy', class: 'busy' },
+  D: { key: 'D', label: 'Disconected', class: 'inactive' },
+}
+function StatusChanger({ user, handleStatus }) {
+  const currentStatus = Object.keys(status).includes(user.status) ? user.status : 'C'
 
-function Navigation() {
+  return (
+    <div className={`select ${status[currentStatus].class}`}>
+      <button>{status[currentStatus].label}</button>
+      <div>
+        {Object.values(status).map((e, k) => (
+          <button key={k} onClick={() => handleStatus(e.key)}>
+            {e.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function Navigation({ user, handleStatus }) {
+  const currentStatus = Object.keys(status).includes(user.status) ? user.status : 'C'
+
   const [toogled, setToogled] = useState(false)
   const toogle = () => setToogled(!toogled)
   return (
@@ -16,21 +39,11 @@ function Navigation() {
         <button className='settings'>
           <i className='fas fa-cog'></i>
         </button>
-        <div className='image-profile active'>
-          <img src='https://picsum.photos/300' alt='avatar'></img>
+        <div className={`image-profile ${status[currentStatus].class}`}>
+          <img src={user.avatar} alt='avatar'></img>
         </div>
-        <span className='title'>Ahmed Meftah</span>
-        <div className='select active'>
-          <button>Connected</button>
-          <div>
-            <button>Connected</button>
-            <button>Busy</button>
-            <button>Disconected</button>
-          </div>
-        </div>
-        {/*
-          <div className='active inactive busy'>
-        */}
+        <span className='title'>{user.fullname}</span>
+        <StatusChanger user={user} handleStatus={handleStatus} />
         <input type='text' placeholder='search' className='search'></input>
 
         <div className='chat-actions-bar'>
