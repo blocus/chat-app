@@ -9,14 +9,16 @@ const expiresIn = 15 * 60
 const emailre =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
+const generateRandomString = () => 'thisShouldBeARandomString'
+
 const UserSchema = Schema({
   username: { type: String, required: true, unique: true, set: v => v.toLowerCase() },
   password: { type: String, required: true, set: p => bcryptjs.hashSync(p, 12) },
-  is_verified_email: { type: Boolean, default: false },
-  name: { type: String },
-  last: { type: String },
+  is_verified_email: { type: Boolean, default: true },
+  name: { type: String, default: '' },
+  last: { type: String, default: '' },
   verification_token: { type: String },
-  avatar: { type: String },
+  avatar: { type: String, default: '/assets/images/default_avatar.png' },
   email: { type: String, unique: true, set: v => v.toLowerCase(), validate: v => emailre.test(v) },
 })
 
@@ -59,7 +61,19 @@ UserSchema.methods.generateAccessToken = function () {
   }
 }
 
-UserSchema.methods.generateRereshToken = function () {
+UserSchema.methods.generateWelcomeEmail = function () {
+  this.verification_token = generateRandomString()
+  this.save()
+  return true
+}
+
+UserSchema.methods.generateforgotPasswordEmail = function () {
+  this.verification_token = generateRandomString()
+  this.save()
+  return true
+}
+
+UserSchema.methods.generateRefreshToken = function () {
   return jwt.sign(this.toJSON(), JWT_REFRESH_SECRET)
 }
 

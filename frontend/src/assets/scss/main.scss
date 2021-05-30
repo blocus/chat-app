@@ -1040,6 +1040,21 @@ input[type="password"] {
     border: 2px solid $primaryColor;
     outline: none;
   }
+  &:invalid {
+    border: 2px solid $disconnectedStatusColor;
+    outline: none;
+  }
+}
+
+.invalid-data {
+  color: $disconnectedStatusColor;
+  text-align: center;
+  line-height: 1em;
+  font-size: $lvl5;
+}
+
+.text-center {
+  text-align: center !important;
 }
 
 input[type="text"]::placeholder,
@@ -1669,5 +1684,20 @@ code {
   align-items: center;
   #comming-soon {
     height: auto;
+  }
+}
+
+.loading {
+  width: 70px;
+  animation: loading 1s linear infinite alternate-reverse;
+}
+
+@keyframes loading {
+  0% {
+    transform: scaleX(1);
+  }
+
+  100% {
+    transform: scaleX(-1);
   }
 }
