@@ -34,14 +34,15 @@ function Logout(props) {
   return <Redirect to='/auth/login' />
 }
 
-function Auth(props) {
+function Auth({ handleLogin, user }) {
+  if (user) return <Redirect to='/' />
   return (
     <div className='auth-container'>
       <div className='auth-container-card'>
         <Switch>
           <Route path='/auth/login' exact>
             <CardHeader subTitle='Already a User ? Just login 😘' />
-            <Login />
+            <Login handleLogin={handleLogin} />
             <CardFooter
               links={[
                 { text: 'Register', link: '/auth/register' },

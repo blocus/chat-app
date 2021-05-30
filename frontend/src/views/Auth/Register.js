@@ -6,9 +6,9 @@ function Register() {
   const [password, setPassword] = useState('')
   const [registred, setRegistred] = useState(false)
   const [fatalError, setFatalError] = useState(false)
+  const [waiting, setWaiting] = useState(false)
   const [invalidUserName, setInvalidUserName] = useState(false)
   const [invalidEmail, setInvalidEmail] = useState(false)
-  const [waiting, setWaiting] = useState(false)
   const {
     register,
     handleSubmit,
@@ -22,10 +22,9 @@ function Register() {
     console.log(data)
     axios
       .post('/auth/register', data)
-      .then(res => {
+      .then(() => {
         setRegistred(true)
         setWaiting(false)
-        console.log(res.data)
       })
       .catch(err => {
         setWaiting(false)
@@ -36,10 +35,6 @@ function Register() {
           const problemKeys = Object.keys(data?.keyPattern ?? {})[0]
           if (problemKeys === 'username') setInvalidUserName('This username is already used')
           else if (problemKeys === 'email') setInvalidEmail('This email is already used')
-          // console.log(problemKeys)
-          // problemKeys.forEach(key => {
-          //   console.log(err?.response?.data)
-          // })
         } else setFatalError(true)
       })
   }

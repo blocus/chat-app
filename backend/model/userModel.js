@@ -23,7 +23,7 @@ const UserSchema = Schema({
 })
 
 UserSchema.methods.verifyPassword = function (password) {
-  return bcryptjs.compare(password, this.password)
+  return bcryptjs.compareSync(password, this.password)
 }
 
 UserSchema.methods.toJSON = function () {

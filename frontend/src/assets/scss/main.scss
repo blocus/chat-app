@@ -1701,3 +1701,21 @@ code {
     transform: scaleX(-1);
   }
 }
+
+.alert {
+  border: $border;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  text-align: center;
+
+  &.alert-success {
+    border-color: $connectedStatusColor;
+    color: $connectedStatusColor;
+    background: rgba($connectedStatusColor, 0.1);
+  }
+  &.alert-danger {
+    border-color: $disconnectedStatusColor;
+    color: $disconnectedStatusColor;
+    background: rgba($disconnectedStatusColor, 0.1);
+  }
+}
