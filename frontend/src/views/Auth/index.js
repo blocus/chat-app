@@ -1,10 +1,45 @@
-import Login from './Login'
-import Register from './Register'
-import ForgotPassword from './ForgotPassword'
-import ChangePassword from './ChangePassword'
-import logo from '../../assets/logo.svg'
-
+import Login from './forms/Login'
+import Register from './forms/Register'
+import ForgotPassword from './forms/ForgotPassword'
+import ChangePassword from './forms/ChangePassword'
+import logo from '../../assets/images/logo.svg'
+import { connect } from 'react-redux'
 import { Route, Switch, Link, Redirect } from 'react-router-dom'
+import { logoutUser } from '../../reducers/actions/userActions'
+
+const cardData = {
+  loginCard: {
+    subTitle: 'Already a User ? Just login 😘',
+    links: [
+      { text: 'Register', link: '/auth/register' },
+      { text: 'Forgot password', link: '/auth/forgot-password' },
+    ],
+  },
+
+  registerCard: {
+    subTitle: 'New ? Welcome. Create an account and join us 🤗',
+    links: [
+      { text: 'Login', link: '/auth/login' },
+      { text: 'Forgot password', link: '/auth/forgot-password' },
+    ],
+  },
+
+  forgotCard: {
+    subTitle: 'We will send you an e-mail and you know the story 😩',
+    links: [
+      { text: 'Login', link: '/auth/login' },
+      { text: 'Register', link: '/auth/register' },
+    ],
+  },
+
+  resetCard: {
+    subTitle: 'We hope you will not forget it again 🙏',
+    links: [
+      { text: 'Login', link: '/auth/login' },
+      { text: 'Register', link: '/auth/register' },
+    ],
+  },
+}
 
 function CardHeader(props) {
   const title = props.title ?? 'Welcome to doveme.space'
@@ -30,17 +65,29 @@ function CardFooter({ links }) {
   )
 }
 
-function Logout({ handleLogout }) {
-  handleLogout()
-  return <Redirect to='/auth/login' />
+function Logout({ logoutUser }) {
+  logoutUser()
+  return <></>
 }
 
-function Auth({ handleLogin, handleLogout, user }) {
+function AuthCard(props) {
+  return (
+    <div className='auth-container'>
+      <div className='auth-container-card'>
+        <CardHeader subTitle={props.subTitle} />
+        {props.children}
+        <CardFooter links={props.links} />
+      </div>
+    </div>
+  )
+}
+
+function Auth({ logoutUser, user }) {
   if (user)
     return (
       <Switch>
         <Route path='/auth/logout' exact>
-          <Logout handleLogout={handleLogout} />
+          <Logout logoutUser={logoutUser} />
         </Route>
         <Route>
           <Redirect to='/' />
@@ -49,59 +96,38 @@ function Auth({ handleLogin, handleLogout, user }) {
     )
 
   return (
-    <div className='auth-container'>
-      <div className='auth-container-card'>
-        <Switch>
-          <Route path='/auth/login' exact>
-            <CardHeader subTitle='Already a User ? Just login 😘' />
-            <Login handleLogin={handleLogin} />
-            <CardFooter
-              links={[
-                { text: 'Register', link: '/auth/register' },
-                { text: 'Forgot password', link: '/auth/forgot-password' },
-              ]}
-            />
-          </Route>
-          <Route path='/auth/register' exact>
-            <CardHeader subTitle='New ? Welcome. Create an account and join us 🤗' />
-            <Register />
-            <CardFooter
-              links={[
-                { text: 'Login', link: '/auth/login' },
-                { text: 'Forgot password', link: '/auth/forgot-password' },
-              ]}
-            />
-          </Route>
-          <Route path='/auth/forgot-password' exact>
-            <CardHeader subTitle='We will send you an e-mail and you know the story 😩' />
-            <ForgotPassword />
-            <CardFooter
-              links={[
-                { text: 'Login', link: '/auth/login' },
-                { text: 'Register', link: '/auth/register' },
-              ]}
-            />
-          </Route>
-          <Route path='/auth/change-password/:token' exact>
-            <CardHeader subTitle='We hope you will not forget it again 🙏' />
-            <ChangePassword />
-            <CardFooter
-              links={[
-                { text: 'Login', link: '/auth/login' },
-                { text: 'Register', link: '/auth/register' },
-              ]}
-            />
-          </Route>
-          <Route path='/auth/logout' exact>
-            <Logout handleLogout={handleLogout} />
-          </Route>
-          <Route>
-            <Redirect to='/auth/login' />
-          </Route>
-        </Switch>
-      </div>
-    </div>
+    <Switch>
+      <Route path='/auth/login' exact>
+        <AuthCard {...cardData.loginCard}>
+          <Login />
+        </AuthCard>
+      </Route>
+
+      <Route path='/auth/register' exact>
+        <AuthCard {...cardData.registerCard}>
+          <Register />
+        </AuthCard>
+      </Route>
+
+      <Route path='/auth/forgot-password' exact>
+        <AuthCard {...cardData.forgotCard}>
+          <ForgotPassword />
+        </AuthCard>
+      </Route>
+
+      <Route path='/auth/change-password/:token' exact>
+        <AuthCard {...cardData.resetCard}>
+          <ChangePassword />
+        </AuthCard>
+      </Route>
+
+      <Route>
+        <Redirect to='/auth/login' />
+      </Route>
+    </Switch>
   )
 }
 
-export default Auth
+const mapStateToProps = state => ({ user: state.user.user })
+
+export default connect(mapStateToProps, { logoutUser })(Auth)

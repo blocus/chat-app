@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import { useState } from 'react'
-import Loading from '../../components/Loading'
+import Loading from '../../../components/Loading'
 function Register() {
   const [password, setPassword] = useState('')
   const [registred, setRegistred] = useState(false)
@@ -19,7 +19,6 @@ function Register() {
 
   const onSubmit = data => {
     setWaiting(true)
-    console.log(data)
     axios
       .post('/auth/register', data)
       .then(() => {

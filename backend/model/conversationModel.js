@@ -29,7 +29,7 @@ conversationSchema.methods.lastMessage = function (myId) {
 }
 
 conversationSchema.methods.relativeMembers = async function (me) {
-  let tmp = { name: 'Undefined User', avatar: defaultAvatar }
+  let tmp = { name: 'Undefined User', avatar: defaultAvatar, status: undefined }
 
   if (this.name) return this.name
 
@@ -39,16 +39,23 @@ conversationSchema.methods.relativeMembers = async function (me) {
       conversationId: this._id,
     })
     .populate('userId')
-    .then(data => data.map(item => ({ name: item.userId.fullName, avatar: item.userId.avatar })))
+    .then(data =>
+      data.map(item => ({
+        status: item.userId.status,
+        name: item.userId.fullName,
+        avatar: item.userId.avatar,
+      }))
+    )
     .catch(err => null)
 
   if (members === null) return tmp
   if (members.length !== 0)
     return {
       avatar: this.type === 'P' ? members[0].avatar : this.avatar,
+      status: this.type === 'P' ? members[0].status : undefined,
       name: members.map(e => e.name).join(', '),
     }
-  return { name: me.fullName, avatar: me.avatar }
+  return { name: me.fullName, avatar: me.avatar, status: me.status }
 }
 
 conversationSchema.methods.toJSON = async function (me) {

@@ -1,0 +1,5 @@
+export const USER_LOGIN = 'USER_LOGIN'
+export const USER_SEND_LOGIN = 'USER_SEND_LOGIN'
+export const USER_RESET_SEND_LOGIN = 'USER_RESET_SEND_LOGIN'
+export const USER_LOGOUT = 'USER_LOGOUT'
+export const USER_INFO = 'USER_INFO'

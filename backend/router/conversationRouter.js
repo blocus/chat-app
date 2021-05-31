@@ -41,7 +41,7 @@ router.post('/:otherUserId', isAuth, otherUser, async (req, res) => {
             const other = ConversationMember({ conversationId: conversation._id, userId: otherId })
             other
               .save()
-              .then(() => res.status(201).send(conversation))
+              .then(() => res.status(201).send(conversation.toJSON()))
               .catch(err => res.status(500).send())
           }
         })

@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { formatDate } from '../../helpers'
-import Loading from '../../components/Loading'
+import { formatDate } from '../../../../helpers'
+import Loading from '../../../../components/Loading'
 import axios from 'axios'
 import { NavLink } from 'react-router-dom'
 const status = {
@@ -44,24 +44,27 @@ function ConversationList(props) {
     <div className='list-chat'>
       {props.conversations
         .sort((a, b) => b.date - a.date)
-        .map((item, key) => (
-          <NavLink className='list-chat-item' key={key} to={`/chat/${item.id}`}>
-            <div className='avatar'>
-              <img src={item.avatar} alt='avatar'></img>
-            </div>
-            <div>
-              <span className='name'>{item.name}</span>
-              {item.seen ? (
-                <span className='preview'>
-                  <b>{item.preview}</b>
-                </span>
-              ) : (
-                <span className='preview'>{item.preview}</span>
-              )}
-            </div>
-            <span className='date'>{formatDate(item.date)}</span>
-          </NavLink>
-        ))}
+        .map((item, key) => {
+          const currentStatus = Object.keys(status).includes(item.status) ? item.status : 'C'
+          return (
+            <NavLink className='list-chat-item' key={key} to={`/chat/${item.id}`}>
+              <div className={`avatar ${status[currentStatus].class}`}>
+                <img src={item.avatar} alt='avatar'></img>
+              </div>
+              <div>
+                <span className='name'>{item.name}</span>
+                {item.seen ? (
+                  <span className='preview'>
+                    <b>{item.preview}</b>
+                  </span>
+                ) : (
+                  <span className='preview'>{item.preview}</span>
+                )}
+              </div>
+              <span className='date'>{formatDate(item.date)}</span>
+            </NavLink>
+          )
+        })}
     </div>
   )
 }
@@ -75,10 +78,13 @@ function Navigation({
 }) {
   const currentStatus = Object.keys(status).includes(user.status) ? user.status : 'C'
   const createConversation = () => {
-    let userId = '60b394eb11da5b0a511afc9d'
-    userId = '60b396c615f52610ee717265'
-    userId = '60b396cf15f52610ee717266'
-    userId = '60b396d715f52610ee717267'
+    let userId
+    userId = '60b30ca5ad0e8715d9a8645b'
+    userId = '60b4de76b8497a8f492a21f4'
+    userId = '60b4de7db8497a8f492a21f5'
+    userId = '60b4de87b8497a8f492a21f6'
+    userId = '60b4de8eb8497a8f492a21f7'
+
     axios.post(`/conversation/${userId}`).then(res => handleConversation(res.data))
   }
   const [toogled, setToogled] = useState(false)

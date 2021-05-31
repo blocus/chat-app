@@ -3,6 +3,7 @@ import Chat from './Chat'
 import { Switch, Route } from 'react-router-dom'
 import CommingSoon from '../../components/CommingSoon'
 import LandingPage from '../LandingPage'
+import { connect } from 'react-redux'
 
 function Dashboard(props) {
   if (!props.user) return <LandingPage />
@@ -43,5 +44,6 @@ function Dashboard(props) {
     </>
   )
 }
+const mapStateToProps = state => ({ user: state.user.user })
 
-export default Dashboard
+export default connect(mapStateToProps, {})(Dashboard)

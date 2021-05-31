@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { Component } from 'react'
-import ChatArea from '../../../components/ChatArea'
-import ChatMeta from '../../../components/ChatMeta'
-import Navigation from '../../../components/Navigation'
+import ChatArea from './ChatArea'
+import ChatMeta from './ChatMeta'
+import Navigation from './Navigation'
 
 const sortConvs = () => -1
 

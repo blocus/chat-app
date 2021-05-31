@@ -533,24 +533,33 @@ nav {
           }
           &::after {
             box-sizing: border-box;
-            border: 2px solid white;
+            border: none;
             content: " ";
             position: absolute;
             width: $statusSize;
             border-radius: $statusSize/2;
             height: $statusSize;
             left: 27px;
-            background: $connectedStatusColor;
+            background: transparent;
             top: 27px;
+          }
+
+          &.active {
+            &::after {
+              border: 2px solid white;
+              background: $connectedStatusColor;
+            }
           }
 
           &.inactive {
             &::after {
+              border: 2px solid white;
               background: $disconnectedStatusColor;
             }
           }
           &.busy {
             &::after {
+              border: 2px solid white;
               background: $busyStatusColor;
             }
           }
@@ -1141,7 +1150,7 @@ input[type="password"]::placeholder {
   justify-content: center;
   background: {
     color: rgb(238, 238, 238);
-    image: url("../logo-bg.svg");
+    image: url("../images/logo-bg.svg");
     size: 50px 50px;
     repeat: repeat;
   }

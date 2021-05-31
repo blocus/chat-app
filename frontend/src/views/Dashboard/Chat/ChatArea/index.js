@@ -1,8 +1,8 @@
-import { genRandomDate, formatDate, genRandomString } from '../../helpers'
-import avatar1 from '../../assets/avatar1.svg'
-import avatar2 from '../../assets/avatar2.svg'
-import avatar3 from '../../assets/avatar3.svg'
-import avatar4 from '../../assets/avatar4.svg'
+import { genRandomDate, formatDate, genRandomString } from '../../../../helpers'
+import avatar1 from '../../../../assets/images/avatar1.svg'
+import avatar2 from '../../../../assets/images/avatar2.svg'
+import avatar3 from '../../../../assets/images/avatar3.svg'
+import avatar4 from '../../../../assets/images/avatar4.svg'
 const senders = [
   { username: 'ahmedmeftah', name: 'Ahmed Meftah', avatar: avatar1, isMe: true },
   { username: 'aaaaaaaaa', name: 'Aaaaaaaa Aaaaaaaa', avatar: avatar2, isMe: false },

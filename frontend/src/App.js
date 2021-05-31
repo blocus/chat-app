@@ -6,6 +6,8 @@ import Waiting from './components/Waiting'
 import axios from 'axios'
 import params from './params.json'
 import socketIOClient from 'socket.io-client'
+import { refreshUser } from './reducers/actions/userActions'
+import { connect } from 'react-redux'
 
 class App extends Component {
   state = {
@@ -14,47 +16,6 @@ class App extends Component {
   }
 
   socket = null
-
-  refreshUser = () => {
-    let access = localStorage.getItem('access_token')
-    let refresh = localStorage.getItem('refresh_token')
-    let token_type = localStorage.getItem('token_type')
-
-    axios.defaults.headers.common['Authorization'] = token_type + ' ' + access
-
-    axios.defaults.headers.common['Refresh'] = refresh
-
-    this.setState({ loadingUser: true }, () => {
-      axios
-        .get('/auth/user-info')
-        .then(res => {
-          localStorage.setItem('refresh_token', res.data.refresh_token)
-          localStorage.setItem('token_type', res.data.token_type)
-          //  I know refresh token should be i a HTTP only cookie I will manage it if i have time
-          localStorage.setItem('access_token', res.data.access_token)
-          axios.defaults.headers.common['Authorization'] =
-            res.data.token_type + ' ' + res.data.access_token
-          axios.defaults.headers.common['Refresh'] = res.data.refresh_token
-          this.socket = socketIOClient(params.baseUrl, {
-            withCredentials: true,
-            extraHeaders: {
-              authorization: res.data.token_type + ' ' + res.data.access_token,
-            },
-          })
-          this.socket.on('USER_STATUS_UPDATED', status => {
-            this.UpdateUserStatus(status)
-          })
-
-          this.setState({ user: res.data.user, loadingUser: false })
-        })
-        .catch(() => {
-          this.socket = null
-          localStorage.removeItem('access_token')
-          localStorage.removeItem('refresh_token')
-          this.setState({ user: null, loadingUser: false })
-        })
-    })
-  }
 
   UpdateUserStatus = status => {
     let user = this.state.user
@@ -66,47 +27,40 @@ class App extends Component {
     this.socket?.emit('USER_STATUS_UPDATE', status)
   }
 
+  componentDidUpdate(prevProps) {
+    // this.socket = socketIOClient(params.baseUrl, {
+    //   withCredentials: true,
+    //   extraHeaders: {
+    //     authorization: res.data.token_type + ' ' + res.data.access_token,
+    //   },
+    // })
+    // this.socket.on('BROADCAST_MY_STATUS', data => console.log(data))
+    // this.socket.on('USER_STATUS_UPDATED', status => {
+    //   this.UpdateUserStatus(status)
+    // })
+  }
+
   componentDidMount() {
     axios.defaults.baseURL = params.baseUrl
-    this.refreshUser()
-  }
-
-  handleLogout = () => {
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
-    axios.defaults.headers.common['Authorization'] = ''
-    axios.defaults.headers.common['Refresh'] = ''
-    this.refreshUser()
-  }
-
-  handleLogin = data => {
-    localStorage.setItem('refresh_token', data.refresh_token)
-    localStorage.setItem('token_type', data.token_type)
-    //  I know refresh token should be i a HTTP only cookie I will manage it if i have time
-    localStorage.setItem('access_token', data.access_token)
-    axios.defaults.headers.common['Authorization'] = data.token_type + ' ' + data.access_token
-    axios.defaults.headers.common['Refresh'] = data.refresh_token
-    this.refreshUser()
+    this.props.refreshUser()
   }
 
   render() {
-    if (this.state.loadingUser) return <Waiting />
+    if (!this.props.user.userLoaded) return <Waiting />
 
     return (
       <Switch>
         <Route path='/auth'>
-          <Auth
-            user={this.state.user}
-            handleLogout={this.handleLogout}
-            handleLogin={this.handleLogin}
-          />
+          <Auth />
         </Route>
         <Route>
-          <Dashboard handleUserStatus={this.handleUserStatus} user={this.state.user} />
+          <Dashboard handleUserStatus={this.handleUserStatus} />
         </Route>
       </Switch>
     )
   }
 }
 
-export default App
+const mapStateToProps = state => ({ user: state.user })
+
+export default connect(mapStateToProps, { refreshUser })(App)

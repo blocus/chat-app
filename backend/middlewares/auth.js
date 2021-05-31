@@ -10,7 +10,12 @@ const isAuth = (req, res, next) => {
   if (token[0] !== 'Bearer') return res.status(403).send()
   token = token[1]
 
-  var decoded = jwt.verify(token, JWT_ACCESS_SECRET)
+  var decoded = jwt.verify(token, JWT_ACCESS_SECRET, function (err, decoded) {
+    if (err) return null
+    return decoded
+  })
+  if (decoded === null) return res.status(401).send()
+
   User.findById(decoded.id)
     .then(user => {
       if (user) {

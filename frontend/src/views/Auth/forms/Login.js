@@ -1,44 +1,27 @@
-import axios from 'axios'
 import { useForm } from 'react-hook-form'
-import { useState } from 'react'
-import Loading from '../../components/Loading'
+import Loading from '../../../components/Loading'
+import { connect } from 'react-redux'
+import { loginUser, resetFataError } from '../../../reducers/actions/userActions'
 
-function Login({ handleLogin }) {
-  const [fatalError, setFatalError] = useState(false)
-  const [loginError, setLoginError] = useState(false)
-  const [waiting, setWaiting] = useState(false)
+function Login({ user, loginUser, resetFataError }) {
+  const fatalError = user.fatalLoginError
+  const loginError = user.loginError
   const { register, handleSubmit } = useForm()
 
-  const onSubmit = data => {
-    setWaiting(true)
-    setLoginError(false)
-    setFatalError(false)
-    axios
-      .post('/auth/login', data)
-      .then(res => {
-        setWaiting(false)
-        handleLogin(res.data)
-      })
-      .catch(err => {
-        setWaiting(false)
-        console.log(err?.response?.status)
-        if (err?.response?.status === 401) setLoginError(true)
-        else setFatalError(true)
-      })
-  }
+  const onSubmit = data => loginUser(data)
 
   if (fatalError) {
     return (
       <div className='auth-container-card-body'>
         <p className='text-center'>Sory we have a problem with our system. 😱</p>
         <p className='text-center'>Please try again later</p>
-        <button className='btn is-primary' onClick={() => setFatalError(false)}>
+        <button className='btn is-primary' onClick={resetFataError}>
           Try again
         </button>
       </div>
     )
   }
-  if (waiting)
+  if (user.sendLogin)
     return (
       <div className='auth-container-card-body'>
         <p className='text-center'>
@@ -59,4 +42,7 @@ function Login({ handleLogin }) {
     </form>
   )
 }
-export default Login
+
+const mapStateToProps = state => ({ user: state.user })
+
+export default connect(mapStateToProps, { loginUser, resetFataError })(Login)

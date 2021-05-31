@@ -26,6 +26,7 @@ const io = socketIO(server, {
     credentials: true,
   },
 })
+
 io.on('connection', async socket => {
   let token = socket.handshake.headers.authorization
   token = token.split(' ')
@@ -33,12 +34,28 @@ io.on('connection', async socket => {
   if (token[0] !== 'Bearer') return
   token = token[1]
 
-  var decoded = jwt.verify(token, JWT_ACCESS_SECRET)
+  var decoded = jwt.verify(token, JWT_ACCESS_SECRET, function (err, decoded) {
+    if (err) {
+      return null
+      /*
+          err = {
+            name: 'TokenExpiredError',
+            message: 'jwt expired',
+            expiredAt: 1408621000
+          }
+        */
+    }
+    return decoded
+  })
+  if (decoded === null) return
+
   const user = await User.findById(decoded.id)
     .then(user => {
-      user.status = 'C'
+      const status = 'C'
+      user.status = status
       user.save()
-      socket.emit('USER_STATUS_UPDATED', 'C')
+      socket.emit('USER_STATUS_UPDATED', status)
+      io.sockets.emit('BROADCAST_MY_STATUS', { other_id: user._id, status })
       return user
     })
     .catch(() => null)
@@ -48,15 +65,23 @@ io.on('connection', async socket => {
     user.status = status
     user
       .save()
-      .then(() => socket.emit('USER_STATUS_UPDATED', status))
-      .catch(() => socket.emit('USER_STATUS_UPDATED', oldStatus))
+      .then(() => {
+        io.sockets.emit('BROADCAST_MY_STATUS', { other_id: user._id, status })
+        socket.emit('USER_STATUS_UPDATED', status)
+      })
+      .catch(() => {
+        io.sockets.emit('BROADCAST_MY_STATUS', { other_id: user._id, status: oldStatus })
+        socket.emit('USER_STATUS_UPDATED', oldStatus)
+      })
     // once we get a 'change color' event from one of our clients, we will send it to the rest of the clients
     // we make use of the socket.emit method again with the argument given to use from the callback function above
   })
 
   socket.on('disconnect', () => {
-    user.status = 'D'
+    const status = 'D'
+    user.status = status
     user.save()
+    io.sockets.emit('BROADCAST', { other_id: user._id, status })
   })
 })
 
