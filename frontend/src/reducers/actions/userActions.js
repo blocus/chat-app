@@ -69,3 +69,7 @@ export const logoutUser = () => dispach => {
   axios.defaults.headers.common['Refresh'] = ''
   return dispach({ type: Types.USER_LOGOUT })
 }
+
+export const updateMyStatus = status => dispach => {
+  return dispach({ type: Types.USER_UPDATE_STATUS, status: status })
+}

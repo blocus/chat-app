@@ -6,7 +6,7 @@ import Waiting from './components/Waiting'
 import axios from 'axios'
 import params from './params.json'
 import socketIOClient from 'socket.io-client'
-import { refreshUser } from './reducers/actions/userActions'
+import { refreshUser, updateMyStatus } from './reducers/actions/userActions'
 import { connect } from 'react-redux'
 
 class App extends Component {
@@ -16,6 +16,7 @@ class App extends Component {
   }
 
   socket = null
+  refresher = null
 
   UpdateUserStatus = status => {
     let user = this.state.user
@@ -28,21 +29,35 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // this.socket = socketIOClient(params.baseUrl, {
-    //   withCredentials: true,
-    //   extraHeaders: {
-    //     authorization: res.data.token_type + ' ' + res.data.access_token,
-    //   },
-    // })
-    // this.socket.on('BROADCAST_MY_STATUS', data => console.log(data))
-    // this.socket.on('USER_STATUS_UPDATED', status => {
-    //   this.UpdateUserStatus(status)
-    // })
+    if (this.props.user.user !== prevProps.user.user) {
+      if (this.props.user.user === null) {
+        this.socket = null
+      } else {
+        console.log()
+        const { access_token, token_type } = localStorage
+        if (this.socket === null) {
+          this.socket = socketIOClient(params.baseUrl, {
+            withCredentials: true,
+            extraHeaders: { authorization: token_type + ' ' + access_token },
+          })
+          // this.socket.on('BROADCAST_MY_STATUS', data => console.log(data))
+          this.socket.on('USER_STATUS_UPDATED', status => {
+            this.props.updateMyStatus(status)
+          })
+        }
+      }
+    }
   }
 
   componentDidMount() {
     axios.defaults.baseURL = params.baseUrl
     this.props.refreshUser()
+    this.refresher = setInterval(this.props.refreshUser, 5000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.refresher)
+    this.socket = null
   }
 
   render() {
@@ -63,4 +78,4 @@ class App extends Component {
 
 const mapStateToProps = state => ({ user: state.user })
 
-export default connect(mapStateToProps, { refreshUser })(App)
+export default connect(mapStateToProps, { refreshUser, updateMyStatus })(App)

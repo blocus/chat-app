@@ -10,6 +10,11 @@ const initialState = {
 
 function userReducer(state = initialState, action) {
   switch (action.type) {
+    case Types.USER_UPDATE_STATUS:
+      return {
+        ...state,
+        user: { ...state.user, status: action.status },
+      }
     case Types.USER_INFO:
       return {
         ...state,

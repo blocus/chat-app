@@ -35,16 +35,7 @@ io.on('connection', async socket => {
   token = token[1]
 
   var decoded = jwt.verify(token, JWT_ACCESS_SECRET, function (err, decoded) {
-    if (err) {
-      return null
-      /*
-          err = {
-            name: 'TokenExpiredError',
-            message: 'jwt expired',
-            expiredAt: 1408621000
-          }
-        */
-    }
+    if (err) return null
     return decoded
   })
   if (decoded === null) return
