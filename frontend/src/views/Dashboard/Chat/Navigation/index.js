@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import { formatDate } from '../../../../helpers'
-import Loading from '../../../../components/Loading'
 import axios from 'axios'
-import { NavLink } from 'react-router-dom'
+import { connect } from 'react-redux'
+import ConversationList from './ConversationList'
 const status = {
   C: { key: 'C', label: 'Connected', class: 'active' },
   B: { key: 'B', label: 'Busy', class: 'busy' },
@@ -26,56 +25,9 @@ function StatusChanger({ user, handleStatus }) {
   )
 }
 
-function ConversationList(props) {
-  if (props.conversationsLoading)
-    return (
-      <div className='list-chat is-waiting'>
-        <Loading />
-      </div>
-    )
+function Navigation(props) {
+  const { user, handleStatus, conversations, conversationsLoading, handleConversation } = props
 
-  if (props.conversations.length === 0)
-    return (
-      <div className='list-chat is-waiting'>
-        <span className='text-muted'>You have no conversations</span>
-      </div>
-    )
-  return (
-    <div className='list-chat'>
-      {props.conversations
-        .sort((a, b) => b.date - a.date)
-        .map((item, key) => {
-          const currentStatus = Object.keys(status).includes(item.status) ? item.status : 'C'
-          return (
-            <NavLink className='list-chat-item' key={key} to={`/chat/${item.id}`}>
-              <div className={`avatar ${status[currentStatus].class}`}>
-                <img src={item.avatar} alt='avatar'></img>
-              </div>
-              <div>
-                <span className='name'>{item.name}</span>
-                {item.seen ? (
-                  <span className='preview'>
-                    <b>{item.preview}</b>
-                  </span>
-                ) : (
-                  <span className='preview'>{item.preview}</span>
-                )}
-              </div>
-              <span className='date'>{formatDate(item.date)}</span>
-            </NavLink>
-          )
-        })}
-    </div>
-  )
-}
-
-function Navigation({
-  user,
-  handleStatus,
-  conversations,
-  conversationsLoading,
-  handleConversation,
-}) {
   const currentStatus = Object.keys(status).includes(user.status) ? user.status : 'C'
   const createConversation = () => {
     let userId
@@ -119,13 +71,13 @@ function Navigation({
             </button>
           </div>
         </div>
-        <ConversationList
-          conversations={conversations}
-          conversationsLoading={conversationsLoading}
-        />
+
+        <ConversationList list={conversations} loading={conversationsLoading} />
       </div>
     </nav>
   )
 }
 
-export default Navigation
+const mapStateToProps = state => ({ user: state.user.user, members: state.members.members })
+
+export default connect(mapStateToProps, {})(Navigation)

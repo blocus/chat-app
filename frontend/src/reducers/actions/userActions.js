@@ -20,12 +20,11 @@ export const loginUser = data => dispach => {
         fatalLoginError: false,
         loginError: false,
       })
-      //   loginUser(res.data)
     })
     .catch(err => {
-      return dispach({ type: Types.USER_LOGIN })
-      //   if (err?.response?.status === 401) setLoginError(true)
-      //   else setFatalError(true)
+      if (err?.response?.status === 401)
+        return dispach({ type: Types.USER_LOGIN, fatalLoginError: false, loginError: true })
+      return dispach({ type: Types.USER_LOGIN, loginError: false, fatalLoginError: true })
     })
 }
 

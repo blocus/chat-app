@@ -1,5 +1,6 @@
 import logo from '../../assets/images/logo.svg'
 import { Link, NavLink } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 const links = [
   { icon: 'far fa-calendar-check', link: '/tasks' },
@@ -47,4 +48,6 @@ function Sidebar({ user }) {
   )
 }
 
-export default Sidebar
+const mapStateToProps = state => ({ user: state.user.user })
+
+export default connect(mapStateToProps, {})(Sidebar)

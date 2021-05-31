@@ -9,7 +9,7 @@ function Dashboard(props) {
   if (!props.user) return <LandingPage />
   return (
     <>
-      <Sidebar user={props.user} />
+      <Sidebar />
       <div id='wrapper'>
         <Switch>
           <Route path='/' exact>

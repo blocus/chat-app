@@ -46,7 +46,7 @@ io.on('connection', async socket => {
       user.status = status
       user.save()
       socket.emit('USER_STATUS_UPDATED', status)
-      io.sockets.emit('BROADCAST_MY_STATUS', { other_id: user._id, status })
+      io.sockets.emit('BROADCAST_MY_STATUS', { user_id: user._id, status })
       return user
     })
     .catch(() => null)
@@ -57,11 +57,11 @@ io.on('connection', async socket => {
     user
       .save()
       .then(() => {
-        io.sockets.emit('BROADCAST_MY_STATUS', { other_id: user._id, status })
+        io.sockets.emit('BROADCAST_MY_STATUS', { user_id: user._id, status })
         socket.emit('USER_STATUS_UPDATED', status)
       })
       .catch(() => {
-        io.sockets.emit('BROADCAST_MY_STATUS', { other_id: user._id, status: oldStatus })
+        io.sockets.emit('BROADCAST_MY_STATUS', { user_id: user._id, status: oldStatus })
         socket.emit('USER_STATUS_UPDATED', oldStatus)
       })
     // once we get a 'change color' event from one of our clients, we will send it to the rest of the clients
@@ -72,7 +72,7 @@ io.on('connection', async socket => {
     const status = 'D'
     user.status = status
     user.save()
-    io.sockets.emit('BROADCAST', { other_id: user._id, status })
+    io.sockets.emit('BROADCAST_MY_STATUS', { user_id: user._id, status })
   })
 })
 

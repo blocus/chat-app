@@ -12,15 +12,8 @@ class Chat extends Component {
     conversationsLoading: true,
   }
 
-  // conversationsInterval = null
-
   componentDidMount() {
     this.refreshConversations()
-    // this.conversationsInterval = setInterval(this.refreshConversations, 5000)
-  }
-
-  componentWillUnmount() {
-    // clearInterval(this.conversationsInterval)
   }
 
   handleConversation = data => {
@@ -49,7 +42,6 @@ class Chat extends Component {
           conversations={this.state.conversations}
           conversationsLoading={this.state.conversationsLoading}
           handleStatus={this.props.handleStatus}
-          user={this.props.user}
         />
         <ChatArea />
         <ChatMeta />

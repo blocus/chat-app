@@ -44,6 +44,7 @@ conversationSchema.methods.relativeMembers = async function (me) {
         status: item.userId.status,
         name: item.userId.fullName,
         avatar: item.userId.avatar,
+        id: item.userId._id,
       }))
     )
     .catch(err => null)
@@ -54,8 +55,9 @@ conversationSchema.methods.relativeMembers = async function (me) {
       avatar: this.type === 'P' ? members[0].avatar : this.avatar,
       status: this.type === 'P' ? members[0].status : undefined,
       name: members.map(e => e.name).join(', '),
+      members: members.map(e => e.id),
     }
-  return { name: me.fullName, avatar: me.avatar, status: me.status }
+  return { name: me.fullName, avatar: me.avatar, status: me.status, members: [me._id] }
 }
 
 conversationSchema.methods.toJSON = async function (me) {

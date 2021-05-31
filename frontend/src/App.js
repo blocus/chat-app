@@ -7,6 +7,7 @@ import axios from 'axios'
 import params from './params.json'
 import socketIOClient from 'socket.io-client'
 import { refreshUser, updateMyStatus } from './reducers/actions/userActions'
+import { getMembers, updateStatus } from './reducers/actions/memberActions'
 import { connect } from 'react-redux'
 
 class App extends Component {
@@ -31,6 +32,7 @@ class App extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.user.user !== prevProps.user.user) {
       if (this.props.user.user === null) {
+        this.socket?.disconnect()
         this.socket = null
       } else {
         console.log()
@@ -40,8 +42,9 @@ class App extends Component {
             withCredentials: true,
             extraHeaders: { authorization: token_type + ' ' + access_token },
           })
-          // this.socket.on('BROADCAST_MY_STATUS', data => console.log(data))
+          this.socket.on('BROADCAST_MY_STATUS', this.props.updateStatus)
           this.socket.on('USER_STATUS_UPDATED', status => {
+            console.log(status)
             this.props.updateMyStatus(status)
           })
         }
@@ -52,7 +55,8 @@ class App extends Component {
   componentDidMount() {
     axios.defaults.baseURL = params.baseUrl
     this.props.refreshUser()
-    this.refresher = setInterval(this.props.refreshUser, 5000)
+    this.refresher = setInterval(this.props.refreshUser, 300000)
+    this.props.getMembers()
   }
 
   componentWillUnmount() {
@@ -78,4 +82,6 @@ class App extends Component {
 
 const mapStateToProps = state => ({ user: state.user })
 
-export default connect(mapStateToProps, { refreshUser, updateMyStatus })(App)
+export default connect(mapStateToProps, { getMembers, updateStatus, refreshUser, updateMyStatus })(
+  App
+)
