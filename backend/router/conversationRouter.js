@@ -26,6 +26,10 @@ router.get('/', isAuth, async (req, res) => {
   res.send(conversationList)
 })
 
+router.get('/:conversationId', isAuth, (req, res) => {
+  res.send({})
+})
+
 router.post('/:otherUserId', isAuth, otherUser, async (req, res) => {
   const conversation = new Conversation({})
 

@@ -44,7 +44,6 @@ class App extends Component {
           })
           this.socket.on('BROADCAST_MY_STATUS', this.props.updateStatus)
           this.socket.on('USER_STATUS_UPDATED', status => {
-            console.log(status)
             this.props.updateMyStatus(status)
           })
         }

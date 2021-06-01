@@ -2,12 +2,7 @@ import { formatDate } from '../../../../helpers'
 import Loading from '../../../../components/Loading'
 import { NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
-
-const status = {
-  C: { key: 'C', label: 'Connected', class: 'active' },
-  B: { key: 'B', label: 'Busy', class: 'busy' },
-  D: { key: 'D', label: 'Disconected', class: 'inactive' },
-}
+import { status } from './constants'
 
 function ConversationList(props) {
   if (props.loading)
@@ -54,6 +49,10 @@ function ConversationList(props) {
   )
 }
 
-const mapStateToProps = state => ({ members: state.members.members })
+const mapStateToProps = state => ({
+  list: state.conversation.conversations,
+  members: state.members.members,
+  loading: state.conversation.loading,
+})
 
 export default connect(mapStateToProps, {})(ConversationList)

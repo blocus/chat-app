@@ -16,6 +16,7 @@ const conversationSchema = Schema(
     name: { type: String },
     avatar: { type: String, default: defaultAvatar },
     type: { type: String, enum: ['G', 'P'], default: 'P' },
+    attachements: [{ type: mongoose.Schema.ObjectId, ref: 'File' }],
   },
   { timestamps: true }
 )
