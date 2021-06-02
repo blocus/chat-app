@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { status } from './constants'
 
 function ConversationList(props) {
+  console.log(props)
   if (props.loading)
     return (
       <div className='list-chat is-waiting'>
@@ -24,7 +25,7 @@ function ConversationList(props) {
         .sort((a, b) => b.date - a.date)
         .map((item, key) => {
           let currentStatus = ''
-          if (item.members.length === 1)
+          if (item.members?.length === 1 && item.type === 'P')
             currentStatus = props.members[item.members[0]]?.status ?? 'D'
           return (
             <NavLink className='list-chat-item' key={key} to={`/chat/${item.id}`}>

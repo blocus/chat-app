@@ -1,23 +1,23 @@
-import { Component } from 'react'
+import { useEffect } from 'react'
 import ChatArea from './ChatArea'
 import Navigation from './Navigation'
 import { getMyConversations } from '../../../reducers/actions/conversationActions'
 import { connect } from 'react-redux'
 // const sortConvs = () => -1
+import { Route, Switch } from 'react-router-dom'
 
-class Chat extends Component {
-  componentDidMount() {
-    this.props.getMyConversations()
-  }
-
-  render() {
-    return (
-      <>
-        <Navigation handleStatus={this.props.handleStatus} />
-        <ChatArea />
-      </>
-    )
-  }
+function Chat(props) {
+  useEffect(() => props.getMyConversations(), [props])
+  return (
+    <>
+      <Navigation handleStatus={props.handleStatus} />
+      <Switch>
+        <Route path='/chat/:convId'>
+          <ChatArea />
+        </Route>
+      </Switch>
+    </>
+  )
 }
 
 const mapStateToProps = state => ({})

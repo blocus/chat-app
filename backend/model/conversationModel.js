@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
+const Message = require('./MessageModel')
 const conversationMemberModel = require('./conversationMemberModel')
-const User = require('./userModel')
 const genRandomDate = () => {
   const Y = 2021
   const M = Math.floor(Math.random() * 2) + 2
@@ -22,17 +22,29 @@ const conversationSchema = Schema(
 )
 
 conversationSchema.methods.lastMessage = function (myId) {
-  return {
-    seen: Math.random() < 0.5,
-    date: genRandomDate(),
-    preview: 'Hello',
-  }
+  return Message.find({ conversationId: this._id })
+    .populate('sender')
+    .sort({ createdAt: -1 })
+    .then(data => data[0].toJSON())
+    .then(data => ({
+      seen: Math.random() < 0.5,
+      date: data.createdAt ?? this.createdAt,
+      preview: data.message.text,
+    }))
+    .catch(() => ({
+      date: this.createdAt,
+    }))
+  // .then(data => data)
+  // .catch(err => {})
+  // return {
+
+  // }
 }
 
 conversationSchema.methods.relativeMembers = async function (me) {
   let tmp = { name: 'Undefined User', avatar: defaultAvatar, status: undefined }
 
-  if (this.name) return this.name
+  if (this.name) tmp.name = this.name
 
   const members = await conversationMemberModel
     .find({
@@ -55,20 +67,52 @@ conversationSchema.methods.relativeMembers = async function (me) {
     return {
       avatar: this.type === 'P' ? members[0].avatar : this.avatar,
       status: this.type === 'P' ? members[0].status : undefined,
-      name: members.map(e => e.name).join(', '),
+      name: this.name ?? members.map(e => e.name).join(', '),
       members: members.map(e => e.id),
     }
   return { name: me.fullName, avatar: me.avatar, status: me.status, members: [me._id] }
 }
 
+conversationSchema.methods.fullMembers = function () {
+  return conversationMemberModel
+    .find({
+      conversationId: this._id,
+    })
+    .populate('userId')
+    .then(data => data.map(e => e.userId))
+    .catch(() => [])
+}
+
 conversationSchema.methods.toJSON = async function (me) {
-  const lastMessage = await this.lastMessage(me)
+  const lastMessage = (await this.lastMessage()) ?? {}
+
+  console.log(lastMessage)
   const members = await this.relativeMembers(me)
   return {
     id: this._id,
     type: this.type,
     ...members,
     ...lastMessage,
+  }
+}
+
+conversationSchema.methods.getFullData = async function (me) {
+  const members = await this.relativeMembers(me)
+  const membersData = await this.fullMembers()
+  // const lastMessage = await this.lastMessage()
+
+  return {
+    conversation: {
+      id: this._id,
+      name: this.name,
+      avatar: this.avatar,
+      type: this.type,
+      attachements: this.attachements,
+      createdAt: this.createdAt,
+      ...members,
+      members: membersData,
+    },
+    messages: [],
   }
 }
 

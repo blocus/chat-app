@@ -16,14 +16,17 @@ router.get('/', isAuth, async (req, res) => {
           if (con) return con.toJSON(req.user)
           else return undefined
         })
-        .catch(() => undefined)
+        .catch(err => {
+          console.log(err)
+          return undefined
+        })
     })
     .filter(conv => conv !== undefined)
 
   const conversationList = await (
     await Promise.all(myConversations)
   ).filter(item => item !== undefined)
-  res.send(conversationList)
+  res.send(await conversationList.sort((a, b) => b.date - a.date))
 })
 
 router.get('/:conversationId', isAuth, (req, res) => {

@@ -37,7 +37,7 @@ function Dashboard(props) {
             <CommingSoon title='Settings' />
           </Route>
           <Route path='/chat'>
-            <Chat handleStatus={props.handleUserStatus} user={props.user} />
+            <Chat handleStatus={props.handleUserStatus} />
           </Route>
         </Switch>
       </div>

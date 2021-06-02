@@ -1,31 +1,6 @@
-import { genRandomDate, formatDate, genRandomString } from '../../../../helpers'
-import avatar1 from '../../../../assets/images/avatar1.svg'
-import avatar2 from '../../../../assets/images/avatar2.svg'
-import avatar3 from '../../../../assets/images/avatar3.svg'
-import avatar4 from '../../../../assets/images/avatar4.svg'
+import { formatDate } from '../../../../helpers'
 import { createRef } from 'react'
 import axios from 'axios'
-const senders = [
-  { username: 'ahmedmeftah', name: 'Ahmed Meftah', avatar: avatar1, isMe: true },
-  { username: 'aaaaaaaaa', name: 'Aaaaaaaa Aaaaaaaa', avatar: avatar2, isMe: false },
-  { username: 'bbbbbbbbb', name: 'bbbbbbbb bbbbbbbbb', avatar: avatar3, isMe: false },
-  { username: 'cccccccccc', name: 'ccccccccccc cccccccccccc', avatar: avatar4, isMe: false },
-]
-
-const messages = Array.from({ length: 30 })
-  .map(() => ({
-    sender: senders[Math.floor(Math.random() * senders.length)],
-    message: Array.from({ length: Math.floor(Math.random() * 3) + 1 }).map(() => ({
-      text: genRandomString(),
-      attachement:
-        Math.random() < 0.1
-          ? { color: '#04ac9b', icon: 'fas fa-file', name: 'Report 05-2021.pdf', size: '3Mb' }
-          : null,
-    })),
-    date: genRandomDate(),
-  }))
-  .sort((a, b) => b.date - a.date)
-
 function Message(props) {
   const Attachement = ({ attachement }) => {
     if (attachement)
@@ -131,13 +106,12 @@ function SendMessage({ roomId, attachements }) {
   )
 }
 
-function ChatMessages() {
+function ChatMessages(props) {
   const attachements = []
-  const roomId = '60b4e79a8e97f8139866d349'
   return (
     <main>
       <header>
-        <span className='main-header-title'>Chat title</span>
+        <span className='main-header-title'>{props.conversation.name}</span>
         <div className='main-header-actions'>
           <button className='active'>Messages</button>
           <button>Participants</button>
@@ -146,12 +120,12 @@ function ChatMessages() {
       <div className='wrapper'>
         <UploadProgress value='50' />
         <IsWriting />
-        {messages.map((e, k) => (
+        {props.messages.map((e, k) => (
           <Message {...e} key={k} />
         ))}
       </div>
 
-      <SendMessage roomId={roomId} attachements={attachements} />
+      <SendMessage roomId={props.conversation.id} attachements={attachements} />
     </main>
   )
 }
