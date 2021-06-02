@@ -82,8 +82,15 @@ io.on('connection', async socket => {
 
         message
           .save()
-          .then(mess => io.sockets.to(convId).emit('RECEIVE_MESSAGE', mess))
-          .catch(err => socket.emit('USER_SEND_MESSAGE_FAIL', err))
+          .then(async mess => {
+            const m = await Message.populate(mess, { path: 'attachements' })
+            console.log(m)
+            io.sockets.to(convId).emit('RECEIVE_MESSAGE', m)
+          })
+          .catch(err => {
+            console.log(err)
+            socket.emit('USER_SEND_MESSAGE_FAIL', err)
+          })
       })
       .catch(err => socket.emit('USER_SEND_MESSAGE_FAIL', err))
   })
