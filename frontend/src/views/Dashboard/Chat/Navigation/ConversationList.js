@@ -3,9 +3,18 @@ import Loading from '../../../../components/Loading'
 import { NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { status } from './constants'
+import { useEffect, useState } from 'react'
+var timer = null
 
 function ConversationList(props) {
-  console.log(props)
+  const [, setRefresher] = useState(0)
+  useEffect(() => {
+    timer = setInterval(() => setRefresher(Math.floor(Math.random() * 10000)), 1000)
+    return () => {
+      clearInterval(timer)
+    }
+  }, [])
+
   if (props.loading)
     return (
       <div className='list-chat is-waiting'>

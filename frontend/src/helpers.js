@@ -10,7 +10,11 @@ export const genRandomDate = () => {
 }
 
 export const formatDate = date => {
-  return moment(date).fromNow()
+  const delta = Math.floor((new Date() - new Date(date)) / 1000)
+  if (delta < 60) return `${delta}s`
+  else if (delta < 3600) return `${Math.floor(delta / 60)}m`
+  else if (delta < 86400) return `${Math.floor(delta / 3600)}h`
+  return `${Math.floor(delta / 86400)}d`
 }
 
 export const formatFullDate = date => {
