@@ -1,28 +1,26 @@
 import { formatFullDate } from '../../../../helpers'
 import { connect } from 'react-redux'
-
+import params from '../../../../params.json'
 function Messages(props) {
   const me = props.user.id
   const isMe = props.sender === me
   const date = props.createdAt
   const sender = props.members[props.sender]
+  const { fullname, avatar } = sender ?? {}
 
-  const { fullname, avatar } = sender
-
-  const Attachement = ({ attachement }) => {
-    // TODO
-    // if (attachement)
-    //   return (
-    //     <div className='message-content-attachement'>
-    //       <span>
-    //         <i style={{ color: attachement.color }} className={attachement.icon} />
-    //         <span>{attachement.name}</span>
-    //       </span>
-    //       <button>
-    //         <i className='fas fa-download'></i>
-    //       </button>
-    //     </div>
-    //   )
+  const Attachement = props => {
+    if (props.id)
+      return (
+        <div className='message-content-attachement'>
+          <span>
+            <i style={{ color: props.color }} className={props.icon} />
+            <span>{props.name}</span>
+          </span>
+          <a target='_blank' rel='noreferrer' href={`${params.baseUrl}/file/${props.id}`}>
+            <i className='fas fa-download'></i>
+          </a>
+        </div>
+      )
     return <></>
   }
 

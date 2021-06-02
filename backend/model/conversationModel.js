@@ -23,11 +23,8 @@ conversationSchema.methods.lastMessage = async function (myId) {
     .then(last => last.lastSeen)
     .catch(err => null)
 
-  console.log(lastSeen)
-
   return Message.find({ conversationId: this._id })
     .populate('sender')
-    .populate('message.attachements')
     .sort({ createdAt: -1 })
     .then(data => data[0].toJSON())
     .then(data => ({
@@ -36,7 +33,6 @@ conversationSchema.methods.lastMessage = async function (myId) {
       preview: data.text,
     }))
     .catch(err => {
-      console.log(err)
       return {
         date: this.createdAt,
       }
@@ -45,6 +41,7 @@ conversationSchema.methods.lastMessage = async function (myId) {
 
 conversationSchema.methods.getMessages = function (myId) {
   return Message.find({ conversationId: this._id })
+    .populate('attachements')
     .sort({ createdAt: -1 })
     .then(data => data.map(e => e.toJSON()))
     .catch(() => [])

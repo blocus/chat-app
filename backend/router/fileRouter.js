@@ -32,4 +32,17 @@ router.post('/upload', isAuth, (req, res) => {
   })
 })
 
+router.get('/:fileId', (req, res) => {
+  File.findById(req.params.fileId)
+    .then(file => {
+      console.log(file)
+      const filePath = `${__dirname}/../uploads/${file.path}`
+      console.log(filePath)
+      res.sendFile(filePath)
+    })
+    .catch(err => {
+      res.send('<h1>Error 500 <br />Internal Server Error</h1>')
+    })
+})
+
 module.exports = router
