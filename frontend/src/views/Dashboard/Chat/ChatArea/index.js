@@ -2,10 +2,11 @@ import ChatMessages from './ChatMessages'
 import ChatMeta from './ChatMeta'
 import { Redirect } from 'react-router-dom'
 import { Component } from 'react'
+import { connect } from 'react-redux'
 import axios from 'axios'
 import socketIOClient from 'socket.io-client'
 import params from '../../../../params.json'
-
+import { updateConversation, iSaw } from '../../../../reducers/actions/conversationActions'
 class ChatArea extends Component {
   state = {
     data: { conversation: {}, messages: [] },
@@ -45,6 +46,7 @@ class ChatArea extends Component {
     data.messages.push(message)
     data.messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     this.setState({ data })
+    this.props.updateConversation(message)
   }
 
   componentDidUpdate() {
@@ -62,11 +64,12 @@ class ChatArea extends Component {
     axios
       .get('/conversation/' + convId)
       .then(res => this.setState({ data: res.data }))
-      .catch(err => this.setState({ redirect: true }))
+      .catch(() => this.setState({ redirect: true }))
   }
 
   see = () => {
     if (this.socket) this.socket.emit('I_SAW', { convId: this.state.convId })
+    this.props.iSaw(this.state.convId)
   }
   imWriting = () => {
     if (this.socket) this.socket.emit('I_M_WRITING', { convId: this.state.convId })
@@ -90,4 +93,8 @@ class ChatArea extends Component {
   }
 }
 
-export default ChatArea
+//
+
+const mapStateToProps = state => ({})
+
+export default connect(mapStateToProps, { updateConversation, iSaw })(ChatArea)
