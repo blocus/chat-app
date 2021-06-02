@@ -2,14 +2,7 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 const Message = require('./MessageModel')
 const conversationMemberModel = require('./conversationMemberModel')
-const genRandomDate = () => {
-  const Y = 2021
-  const M = Math.floor(Math.random() * 2) + 2
-  const D = Math.floor(Math.random() * 28)
-  const h = Math.floor(Math.random() * 24)
-  const i = Math.floor(Math.random() * 60)
-  return new Date(Y, M, D, h, i)
-}
+
 const defaultAvatar = '/assets/images/default_conversation.png'
 const conversationSchema = Schema(
   {
@@ -21,20 +14,33 @@ const conversationSchema = Schema(
   { timestamps: true }
 )
 
-conversationSchema.methods.lastMessage = function (myId) {
+conversationSchema.methods.lastMessage = async function (myId) {
+  const lastSeen = await conversationMemberModel
+    .findOne({
+      conversationId: this._id,
+      userId: myId,
+    })
+    .then(last => last.lastSeen)
+    .catch(err => null)
+
+  console.log(lastSeen)
+
   return Message.find({ conversationId: this._id })
     .populate('sender')
     .populate('message.attachements')
     .sort({ createdAt: -1 })
     .then(data => data[0].toJSON())
     .then(data => ({
-      seen: Math.random() < 0.5,
+      seen: data._id?.toString() === lastSeen?.toString(),
       date: data.createdAt ?? this.createdAt,
       preview: data.text,
     }))
-    .catch(() => ({
-      date: this.createdAt,
-    }))
+    .catch(err => {
+      console.log(err)
+      return {
+        date: this.createdAt,
+      }
+    })
 }
 
 conversationSchema.methods.getMessages = function (myId) {
@@ -87,7 +93,7 @@ conversationSchema.methods.fullMembers = function () {
 }
 
 conversationSchema.methods.toJSON = async function (me) {
-  const lastMessage = (await this.lastMessage()) ?? {}
+  const lastMessage = (await this.lastMessage(me)) ?? {}
 
   const members = await this.relativeMembers(me)
   return {

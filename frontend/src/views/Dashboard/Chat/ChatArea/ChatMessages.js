@@ -125,7 +125,7 @@ class ChatMessages extends Component {
 
   render() {
     return (
-      <main>
+      <main onClick={this.props.see}>
         <header>
           <span className='main-header-title'>{this.props.conversation.name}</span>
           <div className='main-header-actions'>

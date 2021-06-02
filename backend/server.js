@@ -57,12 +57,9 @@ io.on('connection', async socket => {
         .then(data => {
           data.forEach(conv => {
             socket.join(conv.conversationId.toString())
-            console.log(`${user._id} joined ${conv.conversationId}`)
           })
         })
-        .catch(err => {
-          console.log(err)
-        })
+        .catch(err => {})
       return user
     })
     .catch(() => null)
@@ -76,8 +73,6 @@ io.on('connection', async socket => {
     const { convId, text, attachements } = data
     Conversation.findById(convId)
       .then(conv => {
-        console.log('DONE', convId)
-
         const message = new Message({
           conversationId: convId,
           sender: user._id,
@@ -91,6 +86,24 @@ io.on('connection', async socket => {
           .catch(err => socket.emit('USER_SEND_MESSAGE_FAIL', err))
       })
       .catch(err => socket.emit('USER_SEND_MESSAGE_FAIL', err))
+  })
+
+  socket.on('I_SAW', async data => {
+    const messageId = await Message.find({ conversationId: data.convId })
+      .sort({ createdAt: -1 })
+      .then(data => data[0].toJSON())
+      .then(data => data._id)
+      .catch(() => null)
+    if (messageId)
+      ConversationMember.findOneAndUpdate(
+        { conversationId: data.convId, userId: user._id },
+        { lastSeen: messageId },
+        err => {
+          if (err) console.log(err)
+        }
+      )
+    // .then(res => null)
+    // .catch(err => )
   })
 
   socket.on('USER_STATUS_UPDATE', status => {

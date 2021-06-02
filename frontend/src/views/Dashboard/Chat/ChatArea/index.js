@@ -65,6 +65,9 @@ class ChatArea extends Component {
       .catch(err => this.setState({ redirect: true }))
   }
 
+  see = () => {
+    if (this.socket) this.socket.emit('I_SAW', { convId: this.state.convId })
+  }
   imWriting = () => {
     if (this.socket) this.socket.emit('I_M_WRITING', { convId: this.state.convId })
   }
@@ -73,6 +76,7 @@ class ChatArea extends Component {
     return (
       <>
         <ChatMessages
+          see={this.see}
           imWriting={this.imWriting}
           convId={this.state.convId}
           socket={this.socket}

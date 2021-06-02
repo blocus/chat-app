@@ -2,13 +2,7 @@ import axios from 'axios'
 import { connect } from 'react-redux'
 
 function NavigationActions(props) {
-  const handleConversation = data => {
-    console.log(data)
-    // const conversations = this.state.conversations.slice()
-    // conversations.push(data)
-    // conversations.sort(sortConvs)
-    // this.setState({ conversations })
-  }
+  const handleConversation = data => {}
   const createConversation = () => {
     let userId
     userId = '60b30ca5ad0e8715d9a8645b'
