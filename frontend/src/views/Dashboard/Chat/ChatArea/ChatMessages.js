@@ -1,44 +1,9 @@
-import { formatDate } from '../../../../helpers'
-import { createRef } from 'react'
+import { Component, createRef } from 'react'
 import axios from 'axios'
-function Message(props) {
-  const Attachement = ({ attachement }) => {
-    if (attachement)
-      return (
-        <div className='message-content-attachement'>
-          <span>
-            <i style={{ color: attachement.color }} className={attachement.icon} />
-            <span>{attachement.name}</span>
-          </span>
-          <button>
-            <i className='fas fa-download'></i>
-          </button>
-        </div>
-      )
-    return <></>
-  }
-  return (
-    <div className={`message-wrapper${props.sender.isMe ? ' me' : ''}`}>
-      <div className='message-info'>
-        {props.sender.name} {formatDate(props.date)}
-      </div>
-      <div className='message-data'>
-        <img className='message-avatar' src={props.sender.avatar} alt={props.sender.name} />
-
-        <div className='message-content'>
-          {props.message.map((msg, key) => (
-            <div key={key} className='message-content-text'>
-              {msg.text}
-              <Attachement {...msg} />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
+import Message from './Messages'
 
 function UploadProgress(props) {
+  if (!props.uploading) return <></>
   let value
   if (props.value === undefined) return <></>
   if (props.value > 100) value = 100
@@ -61,32 +26,29 @@ function UploadProgress(props) {
   )
 }
 
-function IsWriting(props) {
-  return (
-    <div className='is-writing'>
-      <div className='is-writing-icon'>
-        <span></span>
-        <span></span>
-        <span></span>
+function IsWriting({ writer }) {
+  if (writer)
+    return (
+      <div className='is-writing'>
+        <div className='is-writing-icon'>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <span>{writer} is typing</span>
       </div>
-      <span>Some one is typing</span>
-    </div>
-  )
+    )
+  return <></>
 }
 
-function SendMessage({ roomId, attachements }) {
+function SendMessage({ uploading, upload, send }) {
   const textRef = createRef()
 
-  const send = () => {
+  const Handlesend = () => {
     const text = textRef.current.value
-    const data = { attachements, text }
-    axios
-      .post(`/message/${roomId}`, data)
-      .then(res => {
-        textRef.current.value = ''
-        console.log(res.data)
-      })
-      .catch(console.log)
+    const data = { text }
+    send(data)
+    textRef.current.value = ''
   }
   return (
     <div className='new-message'>
@@ -95,10 +57,14 @@ function SendMessage({ roomId, attachements }) {
         <button>
           <i className='fas fa-laugh'></i>
         </button>
-        <button>
-          <i className='fas fa-paperclip'></i>
-        </button>
-        <button onClick={send} className='btn is-primary'>
+
+        {!uploading && (
+          <button onClick={upload}>
+            <i className='fas fa-paperclip'></i>
+          </button>
+        )}
+
+        <button onClick={Handlesend} className='btn is-primary'>
           <i className='fas fa-paper-plane'></i>
         </button>
       </div>
@@ -106,28 +72,86 @@ function SendMessage({ roomId, attachements }) {
   )
 }
 
-function ChatMessages(props) {
-  const attachements = []
-  return (
-    <main>
-      <header>
-        <span className='main-header-title'>{props.conversation.name}</span>
-        <div className='main-header-actions'>
-          <button className='active'>Messages</button>
-          <button>Participants</button>
-        </div>
-      </header>
-      <div className='wrapper'>
-        <UploadProgress value='50' />
-        <IsWriting />
-        {props.messages.map((e, k) => (
-          <Message {...e} key={k} />
-        ))}
-      </div>
+class ChatMessages extends Component {
+  state = {
+    uploading: false,
+    value: null,
+    file: null,
+  }
 
-      <SendMessage roomId={props.conversation.id} attachements={attachements} />
-    </main>
-  )
+  fileUploader = createRef()
+
+  fileUploadInputChange = e => this.setState({ file: e.target.files[0] })
+
+  selectFile = () => {
+    this.setState({ file: null, value: 0 }, () => {
+      this.fileUploader.current.click()
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.file !== this.state.file && this.state.file && !this.state.uploading) {
+      this.upload()
+    }
+  }
+
+  upload = () => {
+    this.setState({ uploading: true, value: 0 }, () => {
+      const formData = new FormData()
+      formData.append('file', this.state.file)
+      axios
+        .post('/file/upload', formData, {
+          onUploadProgress: progress => {
+            this.setState({ value: Math.round((progress.loaded / progress.total) * 100) })
+          },
+        })
+        .then(res => {
+          this.setState({ uploading: false, value: null, file: null }, () =>
+            this.sendMessage(res.data)
+          )
+        })
+        .catch(() => {
+          this.setState({ uploading: false, value: null, file: null })
+        })
+    })
+  }
+
+  sendMessage = data => {
+    this.props.socket.emit('USER_SEND_MESSAGE', {
+      convId: this.props.convId,
+      attachements: [data.id],
+    })
+  }
+
+  render() {
+    return (
+      <main>
+        <header>
+          <span className='main-header-title'>{this.props.conversation.name}</span>
+          <div className='main-header-actions'>
+            <button className='active'>Messages</button>
+            <button>Participants</button>
+          </div>
+        </header>
+        <div className='wrapper'>
+          <UploadProgress uploading={this.state.uploading} value={this.state.value} />
+          <IsWriting writer={this.props.writer} />
+          {this.props.messages.map((e, k) => (
+            <Message {...e} key={k} />
+          ))}
+        </div>
+
+        <SendMessage
+          roomId={this.props.conversation.id}
+          uploading={this.state.uploading}
+          upload={this.selectFile}
+          send={this.props.send}
+          attachements={this.state.uploaded}
+        />
+        <input type='file' ref={this.fileUploader} onChange={this.fileUploadInputChange} hidden />
+      </main>
+    )
+  }
 }
 
 export default ChatMessages

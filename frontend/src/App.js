@@ -35,7 +35,6 @@ class App extends Component {
         this.socket?.disconnect()
         this.socket = null
       } else {
-        console.log()
         const { access_token, token_type } = localStorage
         if (this.socket === null) {
           this.socket = socketIOClient(params.baseUrl, {

@@ -4,6 +4,8 @@ const ConversationMember = require('../model/conversationMemberModel.js')
 const Conversation = require('../model/conversationModel.js')
 const isAuth = require('../middlewares/auth')
 const otherUser = require('../middlewares/otherUser')
+const File = require('../model/FileModel')
+const isConversation = require('../middlewares/isConversation.js')
 
 router.get('/', isAuth, async (req, res) => {
   const myId = req.user._id
@@ -17,7 +19,6 @@ router.get('/', isAuth, async (req, res) => {
           else return undefined
         })
         .catch(err => {
-          console.log(err)
           return undefined
         })
     })
@@ -29,8 +30,8 @@ router.get('/', isAuth, async (req, res) => {
   res.send(await conversationList.sort((a, b) => b.date - a.date))
 })
 
-router.get('/:conversationId', isAuth, (req, res) => {
-  res.send({})
+router.get('/:conversationId', isAuth, isConversation, async (req, res) => {
+  res.send(await req.conversation.getFullData(req.user))
 })
 
 router.post('/:otherUserId', isAuth, otherUser, async (req, res) => {

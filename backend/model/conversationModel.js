@@ -24,21 +24,24 @@ const conversationSchema = Schema(
 conversationSchema.methods.lastMessage = function (myId) {
   return Message.find({ conversationId: this._id })
     .populate('sender')
+    .populate('message.attachements')
     .sort({ createdAt: -1 })
     .then(data => data[0].toJSON())
     .then(data => ({
       seen: Math.random() < 0.5,
       date: data.createdAt ?? this.createdAt,
-      preview: data.message.text,
+      preview: data.text,
     }))
     .catch(() => ({
       date: this.createdAt,
     }))
-  // .then(data => data)
-  // .catch(err => {})
-  // return {
+}
 
-  // }
+conversationSchema.methods.getMessages = function (myId) {
+  return Message.find({ conversationId: this._id })
+    .sort({ createdAt: -1 })
+    .then(data => data.map(e => e.toJSON()))
+    .catch(() => [])
 }
 
 conversationSchema.methods.relativeMembers = async function (me) {
@@ -86,7 +89,6 @@ conversationSchema.methods.fullMembers = function () {
 conversationSchema.methods.toJSON = async function (me) {
   const lastMessage = (await this.lastMessage()) ?? {}
 
-  console.log(lastMessage)
   const members = await this.relativeMembers(me)
   return {
     id: this._id,
@@ -99,8 +101,7 @@ conversationSchema.methods.toJSON = async function (me) {
 conversationSchema.methods.getFullData = async function (me) {
   const members = await this.relativeMembers(me)
   const membersData = await this.fullMembers()
-  // const lastMessage = await this.lastMessage()
-
+  const messages = await this.getMessages()
   return {
     conversation: {
       id: this._id,
@@ -112,7 +113,7 @@ conversationSchema.methods.getFullData = async function (me) {
       ...members,
       members: membersData,
     },
-    messages: [],
+    messages,
   }
 }
 

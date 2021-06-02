@@ -3,12 +3,18 @@ const http = require('http')
 const socketIO = require('socket.io')
 const port = process.env.PORT || 5000
 const app = express()
+const fileUpload = require('express-fileupload')
 const cors = require('cors')
 const router = require('./router')
 const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET
 const jwt = require('jsonwebtoken')
 const User = require('./model/userModel')
+const ConversationMember = require('./model/conversationMemberModel')
+const Conversation = require('./model/conversationModel')
+const Message = require('./model/MessageModel')
+
 app.use(cors())
+app.use(fileUpload())
 app.use(express.json())
 app.use(router)
 
@@ -47,9 +53,40 @@ io.on('connection', async socket => {
       user.save()
       socket.emit('USER_STATUS_UPDATED', status)
       io.sockets.emit('BROADCAST_MY_STATUS', { user_id: user._id, status })
+      ConversationMember.find({ userId: user._id })
+        .then(data => {
+          data.forEach(conv => {
+            socket.join(conv.conversationId.toString())
+            console.log(`${user._id} joined ${conv.conversationId}`)
+          })
+        })
+        .catch(err => {
+          console.log(err)
+        })
       return user
     })
     .catch(() => null)
+
+  socket.on('USER_SEND_MESSAGE', data => {
+    const { convId, text, attachements } = data
+    Conversation.findById(convId)
+      .then(conv => {
+        console.log('DONE', convId)
+
+        const message = new Message({
+          conversationId: convId,
+          sender: user._id,
+          text: text,
+          attachements: attachements,
+        })
+
+        message
+          .save()
+          .then(mess => io.sockets.to(convId).emit('RECEIVE_MESSAGE', mess))
+          .catch(err => io.sockets.emit('USER_SEND_MESSAGE_FAIL', err))
+      })
+      .catch(err => io.sockets.emit('USER_SEND_MESSAGE_FAIL', err))
+  })
 
   socket.on('USER_STATUS_UPDATE', status => {
     const oldStatus = user.status

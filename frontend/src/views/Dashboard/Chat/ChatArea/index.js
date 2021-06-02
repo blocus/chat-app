@@ -1,60 +1,78 @@
 import ChatMessages from './ChatMessages'
-// import { genRandomDate, formatDate, genRandomString } from '../../../../helpers'
 import ChatMeta from './ChatMeta'
-
-import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { Redirect } from 'react-router-dom'
+import { Component } from 'react'
 import axios from 'axios'
+import socketIOClient from 'socket.io-client'
+import params from '../../../../params.json'
 
-// import avatar1 from '../../../../assets/images/avatar1.svg'
-// import avatar2 from '../../../../assets/images/avatar2.svg'
-// import avatar3 from '../../../../assets/images/avatar3.svg'
-// import avatar4 from '../../../../assets/images/avatar4.svg'
-
-// const senders = [
-//   { username: 'ahmedmeftah', name: 'Ahmed Meftah', avatar: avatar1, isMe: true },
-//   { username: 'aaaaaaaaa', name: 'Aaaaaaaa Aaaaaaaa', avatar: avatar2, isMe: false },
-//   { username: 'bbbbbbbbb', name: 'bbbbbbbb bbbbbbbbb', avatar: avatar3, isMe: false },
-//   { username: 'cccccccccc', name: 'ccccccccccc cccccccccccc', avatar: avatar4, isMe: false },
-// ]
-
-// const messages = Array.from({ length: 30 })
-//   .map(() => ({
-//     sender: senders[Math.floor(Math.random() * senders.length)],
-//     message: Array.from({ length: Math.floor(Math.random() * 3) + 1 }).map(() => ({
-//       text: genRandomString(),
-//       attachement:
-//         Math.random() < 0.1
-//           ? { color: '#04ac9b', icon: 'fas fa-file', name: 'Report 05-2021.pdf', size: '3Mb' }
-//           : null,
-//     })),
-//     date: genRandomDate(),
-//   }))
-//   .sort((a, b) => b.date - a.date)
-
-function ChatArea(props) {
-  const { convId } = useParams()
-  const [data, setData] = useState({
-    conversation: {},
-    messages: [],
-  })
-
-  const refreshData = () => {
-    axios
-      .get('/message/' + convId)
-      .then(res => {
-        setData(res.data)
-      })
-      .catch(err => console.log(err))
+class ChatArea extends Component {
+  state = {
+    data: { conversation: {}, messages: [] },
+    convId: null,
+    redirect: false,
+    writer: null,
   }
-  useEffect(refreshData, [convId])
+  socket = null
 
-  return (
-    <>
-      <ChatMessages {...data} />
-      <ChatMeta {...data} />
-    </>
-  )
+  sendMessage = data => {
+    if (this.socket) this.socket.emit('USER_SEND_MESSAGE', { convId: this.state.convId, ...data })
+  }
+
+  componentDidMount() {
+    this.refreshConvId()
+    const { access_token, token_type } = localStorage
+    if (this.socket === null) {
+      this.socket = socketIOClient(params.baseUrl, {
+        withCredentials: true,
+        extraHeaders: { authorization: token_type + ' ' + access_token },
+      })
+      this.socket.on('RECEIVE_MESSAGE', this.handleReceived)
+      this.socket.on('USER_SEND_MESSAGE_FAIL', this.handleReceived)
+    }
+  }
+
+  handleReceived = message => {
+    const data = JSON.parse(JSON.stringify(this.state.data))
+    data.messages.push(message)
+    data.messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    this.setState({ data })
+    console.log(data)
+  }
+
+  componentDidUpdate() {
+    this.refreshConvId()
+  }
+
+  refreshConvId = () => {
+    let convId = this.props?.match?.params?.convId
+    if (!convId) return this.setState({ redirect: true })
+    if (this.state.convId !== convId) return this.setState({ convId }, this.refresh)
+  }
+
+  refresh = () => {
+    const { convId } = this.state
+    axios
+      .get('/conversation/' + convId)
+      .then(res => this.setState({ data: res.data }))
+      .catch(err => this.setState({ redirect: true }))
+  }
+
+  render() {
+    if (this.state.redirect) return <Redirect to='/' />
+    return (
+      <>
+        <ChatMessages
+          convId={this.state.convId}
+          socket={this.socket}
+          send={this.sendMessage}
+          writer={this.state.writer}
+          {...this.state.data}
+        />
+        <ChatMeta {...this.state.data} />
+      </>
+    )
+  }
 }
 
 export default ChatArea

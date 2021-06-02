@@ -13,9 +13,7 @@ function Chat(props) {
     <>
       <Navigation handleStatus={props.handleStatus} />
       <Switch>
-        <Route path='/chat/:convId'>
-          <ChatArea />
-        </Route>
+        <Route path='/chat/:convId' component={ChatArea}></Route>
         <Route>
           <LastUnseen />
         </Route>

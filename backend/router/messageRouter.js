@@ -5,23 +5,17 @@ const isConversation = require('../middlewares/isConversation')
 const Message = require('../model/MessageModel')
 
 router.post('/:conversationId', isAuth, isConversation, (req, res) => {
-  console.log(req.body)
   const newmessage = Message({
     conversationId: req.params.conversationId,
     sender: req.user._id,
-    message: {
-      text: req.body.text,
-      attachements: req.body.attachements,
-    },
+    text: req.body.text,
+    attachements: req.body.attachements,
   })
 
   newmessage
     .save()
     .then(message => res.send(message))
-    .catch(err => {
-      console.log(err)
-      res.status(500).send(err)
-    })
+    .catch(err => res.status(500).send(err))
 })
 
 router.get('/:conversationId', isAuth, isConversation, async (req, res) => {
