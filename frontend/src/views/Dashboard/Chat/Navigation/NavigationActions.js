@@ -4,12 +4,7 @@ import { connect } from 'react-redux'
 function NavigationActions(props) {
   const handleConversation = data => {}
   const createConversation = () => {
-    let userId
-    userId = '60b30ca5ad0e8715d9a8645b'
-    userId = '60b4de76b8497a8f492a21f4'
-    userId = '60b4de7db8497a8f492a21f5'
-    userId = '60b4de87b8497a8f492a21f6'
-    userId = '60b4de8eb8497a8f492a21f7'
+    let userId = '60b30ca5ad0e8715d9a8645b'
 
     axios.post(`/conversation/${userId}`).then(res => {
       handleConversation(res.data)
