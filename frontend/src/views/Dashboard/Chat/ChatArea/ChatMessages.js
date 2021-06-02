@@ -41,7 +41,7 @@ function IsWriting({ writer }) {
   return <></>
 }
 
-function SendMessage({ uploading, upload, send }) {
+function SendMessage({ uploading, upload, send, imWriting }) {
   const textRef = createRef()
 
   const Handlesend = () => {
@@ -52,7 +52,7 @@ function SendMessage({ uploading, upload, send }) {
   }
   return (
     <div className='new-message'>
-      <textarea ref={textRef} placeholder='Write your message ...'></textarea>
+      <textarea ref={textRef} onChange={imWriting} placeholder='Write your message ...'></textarea>
       <div className='new-message-actions'>
         <button>
           <i className='fas fa-laugh'></i>
@@ -142,6 +142,7 @@ class ChatMessages extends Component {
         </div>
 
         <SendMessage
+          imWriting={this.props.imWriting}
           roomId={this.props.conversation.id}
           uploading={this.state.uploading}
           upload={this.selectFile}

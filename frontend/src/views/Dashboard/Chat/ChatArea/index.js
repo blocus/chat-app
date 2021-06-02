@@ -28,8 +28,16 @@ class ChatArea extends Component {
         extraHeaders: { authorization: token_type + ' ' + access_token },
       })
       this.socket.on('RECEIVE_MESSAGE', this.handleReceived)
+      this.socket.on('SOME_ONE_IS_WRITING', data => this.handleWriter(data))
       this.socket.on('USER_SEND_MESSAGE_FAIL', this.handleReceived)
     }
+  }
+
+  handleWriter = data => {
+    if (data.convId === this.state.convId)
+      this.setState({ writer: data.user }, () =>
+        setTimeout(() => this.setState({ writer: null }), 2000)
+      )
   }
 
   handleReceived = message => {
@@ -37,7 +45,6 @@ class ChatArea extends Component {
     data.messages.push(message)
     data.messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     this.setState({ data })
-    console.log(data)
   }
 
   componentDidUpdate() {
@@ -58,11 +65,15 @@ class ChatArea extends Component {
       .catch(err => this.setState({ redirect: true }))
   }
 
+  imWriting = () => {
+    if (this.socket) this.socket.emit('I_M_WRITING', { convId: this.state.convId })
+  }
   render() {
     if (this.state.redirect) return <Redirect to='/' />
     return (
       <>
         <ChatMessages
+          imWriting={this.imWriting}
           convId={this.state.convId}
           socket={this.socket}
           send={this.sendMessage}

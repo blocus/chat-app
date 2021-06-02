@@ -67,6 +67,11 @@ io.on('connection', async socket => {
     })
     .catch(() => null)
 
+  socket.on('I_M_WRITING', data => {
+    const { convId } = data
+    socket.to(convId).emit('SOME_ONE_IS_WRITING', { user: user.fullName, convId })
+  })
+
   socket.on('USER_SEND_MESSAGE', data => {
     const { convId, text, attachements } = data
     Conversation.findById(convId)
@@ -83,9 +88,9 @@ io.on('connection', async socket => {
         message
           .save()
           .then(mess => io.sockets.to(convId).emit('RECEIVE_MESSAGE', mess))
-          .catch(err => io.sockets.emit('USER_SEND_MESSAGE_FAIL', err))
+          .catch(err => socket.emit('USER_SEND_MESSAGE_FAIL', err))
       })
-      .catch(err => io.sockets.emit('USER_SEND_MESSAGE_FAIL', err))
+      .catch(err => socket.emit('USER_SEND_MESSAGE_FAIL', err))
   })
 
   socket.on('USER_STATUS_UPDATE', status => {
