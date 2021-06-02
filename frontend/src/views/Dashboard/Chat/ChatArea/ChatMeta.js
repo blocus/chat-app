@@ -4,8 +4,6 @@ import { formatFullDate } from '../../../../helpers'
 function ChatMeta(props) {
   const conversation = props.conversation ?? {}
   const { avatar, name, type, members } = conversation
-  console.log(props.conversation.members)
-  console.log(props.conversation.type)
   const [toogled, setToogled] = useState(false)
   const toogle = () => setToogled(!toogled)
   const number = members?.length ?? 0

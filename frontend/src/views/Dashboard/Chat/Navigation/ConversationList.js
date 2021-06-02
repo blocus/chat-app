@@ -42,13 +42,20 @@ function ConversationList(props) {
                 <img src={item.avatar} alt='avatar'></img>
               </div>
               <div>
-                <span className='name'>{item.name}</span>
                 {item.seen ? (
-                  <span className='preview'>
-                    <b>{item.preview}</b>
-                  </span>
+                  <>
+                    <span className='name'>{item.name}</span>
+                    <span className='preview'>{item.preview}</span>
+                  </>
                 ) : (
-                  <span className='preview'>{item.preview}</span>
+                  <>
+                    <span className='name'>
+                      <b>{item.name}</b>
+                    </span>
+                    <span className='preview'>
+                      <b>{item.preview}</b>
+                    </span>
+                  </>
                 )}
               </div>
               <span className='date'>{formatDate(item.date)}</span>

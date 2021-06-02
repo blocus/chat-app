@@ -3,6 +3,7 @@ import ChatArea from './ChatArea'
 import Navigation from './Navigation'
 import { getMyConversations } from '../../../reducers/actions/conversationActions'
 import { connect } from 'react-redux'
+import LastUnseen from './LastUnseen'
 // const sortConvs = () => -1
 import { Route, Switch } from 'react-router-dom'
 
@@ -14,6 +15,9 @@ function Chat(props) {
       <Switch>
         <Route path='/chat/:convId'>
           <ChatArea />
+        </Route>
+        <Route>
+          <LastUnseen />
         </Route>
       </Switch>
     </>
